@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:4.1.6"
+    }
+}
+
+apply plugin: "io.freefair.lombok"
+apply plugin: 'java'
+
+group 'me.deftware'
+version '1.0.0'
+
+sourceCompatibility = 1.8
+
+configurations {
+    extraLibs
+    implementation.extendsFrom(extraLibs)
+}
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    extraLibs 'com.google.code.gson:gson:2.8.2'
+    extraLibs 'org.apache.logging.log4j:log4j-api:2.11.0'
+    extraLibs 'org.apache.logging.log4j:log4j-core:2.11.0'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3', classifier:'natives-windows'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3', classifier:'natives-windows'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3', classifier:'natives-windows'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3', classifier:'natives-windows'
+    extraLibs group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
+    extraLibs group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    extraLibs group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest.attributes(
+            "build_date": new Date().format('yyyy/MM/dd HH:mm'),
+            "Main-Class": 'me.deftware.installer.Main',
+            "Manifest-Version": 1.0
+    )
+}
