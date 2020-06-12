@@ -18,6 +18,17 @@ public class TextComponent extends AbstractComponent {
 	private Consumer<Integer> clickCallback;
 	private @Setter @Getter String text;
 
+	/**
+	 * 0 = Not enabled
+	 * 1 = Fade in
+	 * 2 = Fade out
+	 */
+	private @Getter @Setter int fadeStatus = 0, alpha = 255;
+
+	private double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
+
+	private Consumer<Integer> fadeCallback;
+
 	public TextComponent(float x, float y, String font, int size, String text) {
 		this(x, y, font, size, null, text);
 	}
@@ -35,6 +46,35 @@ public class TextComponent extends AbstractComponent {
 		}
 	}
 
+	public void fadeOut(Consumer<Integer> callback) {
+		fadeCallback = callback;
+		fadeStatus = 2;
+	}
+
+	public void fadeIn(Consumer<Integer> callback) {
+		fadeCallback = callback;
+		fadeStatus = 1;
+	}
+
+	@Override
+	public void update() {
+		if (fadeStatus != 0) {
+			if (i <= 1 && (fadeStatus == 2 && alpha > 3 || fadeStatus == 1 && alpha < 255)) {
+				double current = Math.sin(counter) * (255 / iterations * counter);
+				alpha = (int) (fadeStatus == 2 ? alpha - current : alpha + current);
+				counter += increase;
+				i += 1 / iterations;
+			} else {
+				fadeStatus = 0;
+				i = 0;
+				counter = 0;
+				if (fadeCallback != null) {
+					fadeCallback.accept(alpha);
+				}
+			}
+		}
+	}
+
 	@Override
 	public float getWidth() {
 		return font.getStringWidth(text);
@@ -47,11 +87,8 @@ public class TextComponent extends AbstractComponent {
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
-		font.drawString((int) x, (int) y, text);
+		font.drawString((int) x, (int) y, text,  new Color(255, 255, 255, alpha));
 	}
-
-	@Override
-	public void update() { }
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
