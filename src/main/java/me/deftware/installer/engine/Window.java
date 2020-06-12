@@ -1,6 +1,7 @@
 package me.deftware.installer.engine;
 
 import lombok.Getter;
+import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
@@ -46,6 +47,11 @@ public class Window implements Runnable {
 
 	@Override
 	public void run() {
+		if (OSUtils.isLinux()) {
+			// Does not work with Wayland
+			borderlessWindow = false;
+		}
+
 		// 60 times per second
 		updatedThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
 			if (currentScreen != null) {
