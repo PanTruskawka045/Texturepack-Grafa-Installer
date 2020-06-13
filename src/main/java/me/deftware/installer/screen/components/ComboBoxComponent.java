@@ -11,6 +11,7 @@ import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractComponent;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Deftware
@@ -23,6 +24,7 @@ public class ComboBoxComponent extends AbstractComponent {
 	private @Getter @Setter int index = 0, hoverIndex = 0, maxItems = 5, indexOffset = 0;
 	private String[] items;
 	private boolean expanded = false;
+	private @Setter Consumer<String> itemChangedCallback;
 
 	public ComboBoxComponent(float x, float y, float width, int size, String font, String... items) {
 		super(x, y);
@@ -38,6 +40,15 @@ public class ComboBoxComponent extends AbstractComponent {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		if (itemChangedCallback != null) {
+			itemChangedCallback.accept(getSelectedItem());
+		}
+	}
+
+	public void updateItems(String... items) {
+		index = indexOffset = 0;
+		this.items = items;
+		maxItems = items.length + 1 < 5 ? items.length : 5;
 	}
 
  	public String getSelectedItem() {
@@ -56,6 +67,7 @@ public class ComboBoxComponent extends AbstractComponent {
 			ex.printStackTrace();
 		}
 		if (expanded) {
+			float oriY = y;
 			y = y + 6 + font.getStringHeight(getSelectedItem());
 			int loopIndex = 0;
 			hoverIndex = -1;
@@ -70,6 +82,7 @@ public class ComboBoxComponent extends AbstractComponent {
 				}
 				loopIndex++;
 			}
+			RenderSystem.drawLine(x, oriY + height - 1, x + width, oriY + height);
 		}
 	}
 
@@ -93,6 +106,9 @@ public class ComboBoxComponent extends AbstractComponent {
 		} else if (expanded) {
 			if (hoverIndex != -1) {
 				index = hoverIndex;
+				if (itemChangedCallback != null) {
+					itemChangedCallback.accept(getSelectedItem());
+				}
 			}
 			expanded = false;
 			return true;

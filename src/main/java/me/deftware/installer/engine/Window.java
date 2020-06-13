@@ -20,6 +20,8 @@ import org.lwjgl.system.MemoryUtil;
 import java.awt.*;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -28,17 +30,19 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Deftware
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class Window implements Runnable {
 
 	public @Getter long windowHandle;
 	public @Getter double mouseX, mouseY;
 	public @Getter boolean borderlessWindow = true;
 	public int windowWidth = 800, windowHeight = 500;
+	private boolean transitionForward = true;
 	private double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
-	private final DoubleBuffer posX = BufferUtils.createDoubleBuffer(1), posY = BufferUtils.createDoubleBuffer(1);
+	private DoubleBuffer posX = BufferUtils.createDoubleBuffer(1), posY = BufferUtils.createDoubleBuffer(1);
 	public AbstractScreen currentScreen, transitionScreen;
-	private ScheduledFuture<?> updatedThread;
 	private @Getter WindowDecorations windowDecorations;
+	private List<Runnable> renderThreadRunner = new ArrayList<>();
 
 	/**
 	 * Set to false for things like opening dialogs
@@ -53,7 +57,7 @@ public class Window implements Runnable {
 		}
 
 		// 60 times per second
-		updatedThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+		ScheduledFuture<?> updatedThread = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
 			if (currentScreen != null) {
 				currentScreen.update();
 			}
@@ -75,13 +79,22 @@ public class Window implements Runnable {
 	}
 
 	private void handleTransition() {
-		if (transitionScreen.getX() > 0) {
+		if (transitionScreen.getX() > 0 && transitionForward || transitionScreen.getX() < 0 && !transitionForward) {
 			if (i <= 1) {
-				transitionScreen.setX((int) (transitionScreen.getX() - Math.sin(counter) * (windowWidth / iterations * counter)));
+				double transition = Math.sin(counter) * (windowWidth / iterations * counter);
+				if (transitionForward) {
+					transitionScreen.setX((int) (transitionScreen.getX() - transition));
+				} else {
+					transitionScreen.setX((int) (transitionScreen.getX() + transition));
+				}
 				counter += increase;
 				i += 1 / iterations;
 			}
-			currentScreen.setX(transitionScreen.getX() - windowWidth);
+			if (transitionForward) {
+				currentScreen.setX(transitionScreen.getX() - windowWidth);
+			} else {
+				currentScreen.setX(transitionScreen.getX() + windowWidth);
+			}
 		} else {
 			currentScreen = transitionScreen;
 			currentScreen.setX(0);
@@ -89,11 +102,26 @@ public class Window implements Runnable {
 		}
 	}
 
-	public void transitionTo(AbstractScreen screen) {
-		counter = 0;
-		i = 0;
-		screen.setX(windowWidth);
-		transitionScreen = screen;
+	public void transitionForward(AbstractScreen screen) {
+		renderThreadRunner.add(() -> {
+			screen.init();
+			transitionForward = true;
+			counter = 0;
+			i = 0;
+			screen.setX(windowWidth);
+			transitionScreen = screen;
+		});
+	}
+
+	public void transitionBackwards(AbstractScreen screen) {
+		renderThreadRunner.add(() -> {
+			screen.init();
+			transitionForward = false;
+			counter = 0;
+			i = 0;
+			screen.setX(-windowWidth);
+			transitionScreen = screen;
+		});
 	}
 
 	public boolean isTransitioning() {
@@ -193,6 +221,7 @@ public class Window implements Runnable {
 		}
 
 		currentScreen = new WelcomeScreen();
+		currentScreen.init();
 		while (!GLFW.glfwWindowShouldClose(windowHandle)) {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			if (borderlessWindow) windowDecorations.loop();
@@ -204,6 +233,14 @@ public class Window implements Runnable {
 			posY.clear();
 
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+			if (!renderThreadRunner.isEmpty()) {
+				for (Runnable runnable : renderThreadRunner) {
+					runnable.run();
+				}
+				renderThreadRunner.clear();
+			}
+
 			if (currentScreen != null) {
 				currentScreen.render(mouseX, mouseY);
 			}

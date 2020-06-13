@@ -7,16 +7,20 @@ import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractComponent;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * @author Deftware
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class TextComponent extends AbstractComponent {
 
 	private BitmapFont font;
-	private Consumer<Integer> clickCallback;
-	private @Setter @Getter String text;
+	private @Setter Consumer<Integer> clickCallback;
+	private @Getter List<String> text;
+	private @Getter @Setter boolean centeredText = true;
 
 	/**
 	 * 0 = Not enabled
@@ -29,13 +33,13 @@ public class TextComponent extends AbstractComponent {
 
 	private Consumer<Integer> fadeCallback;
 
-	public TextComponent(float x, float y, String font, int size, String text) {
+	public TextComponent(float x, float y, String font, int size, String... text) {
 		this(x, y, font, size, null, text);
 	}
 
-	public TextComponent(float x, float y, String font, int size, Consumer<Integer> clickCallback, String text) {
+	public TextComponent(float x, float y, String font, int size, Consumer<Integer> clickCallback, String... text) {
 		super(x, y);
-		this.text = text;
+		this.text = Arrays.asList(text);
 		this.clickCallback = clickCallback;
 		try {
 			this.font = FontManager.getFont(font, size, FontManager.Modifiers.ANTIALIASED);
@@ -54,6 +58,10 @@ public class TextComponent extends AbstractComponent {
 	public void fadeIn(Consumer<Integer> callback) {
 		fadeCallback = callback;
 		fadeStatus = 1;
+	}
+
+	public void setText(String... text) {
+		this.text = Arrays.asList(text);
 	}
 
 	@Override
@@ -77,22 +85,35 @@ public class TextComponent extends AbstractComponent {
 
 	@Override
 	public float getWidth() {
-		return font.getStringWidth(text);
+		int maxLength = 0;
+		for (String line : text) {
+			if (maxLength < font.getStringWidth(line)) {
+				maxLength = font.getStringWidth(line);
+			}
+		}
+		return maxLength;
 	}
 
 	@Override
 	public float getHeight() {
-		return font.getStringHeight(text);
+		return font.getStringHeight("ABC123") * text.size();
 	}
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
-		font.drawString((int) x, (int) y, text,  new Color(255, 255, 255, alpha));
+		for (String line : text) {
+			if (!centeredText) {
+				font.drawString((int) x, (int) y, line,  new Color(255, 255, 255, alpha));
+			} else {
+				font.drawString((int) (x + ((getWidth() / 2) - (font.getStringWidth(line) / 2))), (int) y, line,  new Color(255, 255, 255, alpha));
+				y += font.getStringHeight(line);
+			}
+		}
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > this.getX() && x < this.getX() + font.getStringWidth(text) && y > this.getY() && y < this.getY() + font.getStringHeight(text) && clickCallback != null) {
+		if (x > this.getX() && x < this.getX() + getWidth() && y > this.getY() && y < this.getY() + getWidth() && clickCallback != null) {
 			clickCallback.accept(mouseButton);
 			return true;
 		}

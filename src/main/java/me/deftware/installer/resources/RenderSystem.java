@@ -42,7 +42,7 @@ public class RenderSystem {
 		GL11.glDisable(3553);
 		GL11.glBlendFunc(770, 771);
 		GL11.glEnable(2848);
-		GL11.glLineWidth(2.0F);
+		GL11.glLineWidth(1.0F);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		GL11.glBegin(GL11.GL_LINES);
 		GL11.glVertex2f(x1, y1);

@@ -15,10 +15,7 @@ public abstract class AbstractScreen {
 
 	private @Getter @Setter int x = 0, y = 0;
 	protected @Getter List<AbstractComponent> componentList = new ArrayList<>();
-
-	public AbstractScreen() {
-		init();
-	}
+	protected @Getter @Setter boolean initialized = false;
 
 	protected void addComponent(AbstractComponent... components) {
 		componentList.addAll(Arrays.asList(components));

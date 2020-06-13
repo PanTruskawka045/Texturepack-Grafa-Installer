@@ -1,10 +1,12 @@
 package me.deftware.installer.screen.impl;
 
 import me.deftware.installer.Main;
+import me.deftware.installer.logic.InstallerAPI;
 import me.deftware.installer.screen.AbstractComponent;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextureComponent;
+import me.deftware.installer.screen.impl.configure.VersionScreen;
 
 import java.awt.*;
 import java.net.URI;
@@ -22,9 +24,9 @@ public class WelcomeScreen extends AbstractScreen {
 		componentList.clear();
 		AbstractComponent logoShadow = new TextureComponent(0, 2, "/assets/logo_shadow.png", 4).centerHorizontally(2);
 		addComponent(new TextureComponent(0, 0, "/assets/logo.png", 4).centerHorizontally(), logoShadow);
-		button = new ButtonComponent(50, 350, 100, 50, "Loading...", mouseButton -> {
+		button = new ButtonComponent(50, 350, 150, 50, "Fetching data...", mouseButton -> {
 			if (loaded) {
-				Main.getWindow().transitionTo(new VersionScreen());
+				Main.getWindow().transitionForward(new VersionScreen());
 			}
 		});
 		button.centerHorizontally();
@@ -43,15 +45,10 @@ public class WelcomeScreen extends AbstractScreen {
 
 		addComponent(button, gitIcon);
 
-		// DEMO
 		new Thread(() -> {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			InstallerAPI.fetchData(false);
 			loaded = true;
-			button.setText("Install");
+			button.setText("Continue");
 		}).start();
 	}
 
