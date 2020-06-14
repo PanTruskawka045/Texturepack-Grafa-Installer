@@ -1,24 +1,29 @@
 package me.deftware.installer.engine;
 
+import com.google.common.io.ByteStreams;
+import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
+import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.impl.WelcomeScreen;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -143,6 +148,24 @@ public class Window implements Runnable {
 
 		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, "Aristois Installer " + (InstallerAPI.isDonorBuild() ? "donor edition" : ""), MemoryUtil.NULL, MemoryUtil.NULL);
 		if (windowHandle == MemoryUtil.NULL) throw new RuntimeException("Failed to create the GLFW window");
+
+		try {
+			PNGDecoder decoder = new PNGDecoder(ResourceUtils.getStreamFromResources("/assets/logo.png"));
+			ByteBuffer buf = BufferUtils.createByteBuffer(decoder.getWidth() * decoder.getHeight() * 4);
+			decoder.decode(buf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+			buf.flip();
+
+			GLFWImage image = GLFWImage.malloc();
+			image.set(decoder.getWidth(), decoder.getHeight(), buf);
+			GLFWImage.Buffer images = GLFWImage.malloc(1);
+
+			GLFW.glfwSetWindowIcon(windowHandle, images.put(0, image));
+
+			images.free();
+			image.free();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
 		GLFW.glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
 			if (currentScreen != null && action == GLFW.GLFW_RELEASE && shouldRun) {
