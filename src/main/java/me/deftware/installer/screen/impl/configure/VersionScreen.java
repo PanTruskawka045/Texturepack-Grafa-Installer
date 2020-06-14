@@ -1,7 +1,7 @@
 package me.deftware.installer.screen.impl.configure;
 
+import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.Main;
-import me.deftware.installer.logic.InstallerAPI;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.*;
 
@@ -26,7 +26,6 @@ public class VersionScreen extends AbstractScreen {
 					Main.getWindow().transitionForward(new TransitionScreen("Got it, Minecraft " + version + " it is", button -> {
 						Main.getWindow().transitionForward(new LauncherScreen(version));
 					}, "Next, you will select launcher and Minecraft home directory", "and maybe use a custom mod loader~"));
-
 		}).centerHorizontally());
 	}
 

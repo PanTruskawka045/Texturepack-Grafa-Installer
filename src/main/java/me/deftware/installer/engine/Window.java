@@ -1,6 +1,7 @@
 package me.deftware.installer.engine;
 
 import lombok.Getter;
+import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
@@ -140,7 +141,7 @@ public class Window implements Runnable {
 			GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
 		}
 
-		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, "Aristois Installer", MemoryUtil.NULL, MemoryUtil.NULL);
+		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, "Aristois Installer " + (InstallerAPI.isDonorBuild() ? "donor edition" : ""), MemoryUtil.NULL, MemoryUtil.NULL);
 		if (windowHandle == MemoryUtil.NULL) throw new RuntimeException("Failed to create the GLFW window");
 
 		GLFW.glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
@@ -217,7 +218,7 @@ public class Window implements Runnable {
 		font.initialize(Color.white, "");
 
 		if (borderlessWindow) {
-			windowDecorations = new WindowDecorations("Aristois Installer");
+			windowDecorations = new WindowDecorations("Aristois Installer " + (InstallerAPI.isDonorBuild() ? "donor edition" : ""));
 		}
 
 		currentScreen = new WelcomeScreen();

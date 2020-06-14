@@ -20,6 +20,7 @@ public class ButtonComponent extends AbstractComponent {
 	private BitmapFont font;
 	private @Getter @Setter String text;
 	private Consumer<Integer> onClick;
+	private @Setter boolean visible = true;
 
 	public ButtonComponent(float x, float y, float width, float height, String text, Consumer<Integer> onClick) {
 		super(x, y);
@@ -33,10 +34,12 @@ public class ButtonComponent extends AbstractComponent {
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
-		RenderSystem.drawRect(x, y, x + width, y + height, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-		RenderSystem.drawCircle(x, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-		RenderSystem.drawCircle(x + width, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-		font.drawStringWithShadow((int) (x + ((width / 2) - (font.getStringWidth(text) / 2))), (int) (y + ((height / 2) - (font.getStringHeight(text) / 2))), text);
+		if (visible) {
+			RenderSystem.drawRect(x, y, x + width, y + height, ColorPalette.BRIGHT_BACKGROUND_COLOR);
+			RenderSystem.drawCircle(x, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
+			RenderSystem.drawCircle(x + width, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
+			font.drawStringWithShadow((int) (x + ((width / 2) - (font.getStringWidth(text) / 2))), (int) (y + ((height / 2) - (font.getStringHeight(text) / 2))), text);
+		}
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class ButtonComponent extends AbstractComponent {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > getX() && x < getX() + width && y > getY() && y < getY() + height) {
+		if (x > getX() && x < getX() + width && y > getY() && y < getY() + height && visible) {
 			onClick.accept(mouseButton);
 			return true;
 		}

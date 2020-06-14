@@ -1,9 +1,9 @@
 package me.deftware.installer.screen.impl.configure;
 
+import me.deftware.aristois.installer.InstallerAPI;
+import me.deftware.aristois.installer.utils.VersionData;
 import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
-import me.deftware.installer.logic.InstallerAPI;
-import me.deftware.installer.logic.utils.VersionData;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.*;
 import me.deftware.installer.screen.impl.InstallingScreen;
@@ -46,11 +46,11 @@ public class LauncherScreen extends AbstractScreen {
 							if (!confirm) {
 								Main.getWindow().transitionBackwards(LauncherScreen.this);
 							} else {
-								Main.getWindow().transitionForward(new InstallingScreen(version, minecraftPath.getText(), launcher));
+								Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
 							}
-						}, "Using a custom mod loader is not officially supported", "and you may crash or have stability issues.", "Do not report bugs when using one."));
+						}, "Using a custom mod loader is not officially supported", "and you may crash or have stability issues.", "Do not report bugs when using one.", "", "If you still wish to use one, press \"Continue\""));
 					} else {
-						Main.getWindow().transitionForward(new InstallingScreen(version, minecraftPath.getText(), launcher));
+						Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
 					}
 				}).centerHorizontally(), minecraftPath);
 	}

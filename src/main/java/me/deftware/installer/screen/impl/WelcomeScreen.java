@@ -1,15 +1,13 @@
 package me.deftware.installer.screen.impl;
 
+import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.Main;
-import me.deftware.installer.logic.InstallerAPI;
 import me.deftware.installer.screen.AbstractComponent;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
+import me.deftware.installer.screen.components.TextComponent;
 import me.deftware.installer.screen.components.TextureComponent;
 import me.deftware.installer.screen.impl.configure.VersionScreen;
-
-import java.awt.*;
-import java.net.URI;
 
 /**
  * @author Deftware
@@ -32,22 +30,22 @@ public class WelcomeScreen extends AbstractScreen {
 		button.centerHorizontally();
 
 		TextureComponent gitIcon = new TextureComponent(0, 0, "/assets/git.png", 10, mouseButton -> {
-			try {
-				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-					Desktop.getDesktop().browse(new URI("https://gitlab.com/Aristois/Installer"));
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			openLink("https://gitlab.com/Aristois/ui-installer");
 		});
 		gitIcon.setX(Main.getWindow().windowWidth - gitIcon.getWidth() - 10);
 		gitIcon.setY(Main.getWindow().windowHeight - gitIcon.getHeight() - 10);
 
-		addComponent(button, gitIcon);
+		addComponent(button, gitIcon, new TextComponent(0, gitIcon.getY() + 20, "Product Sans", 18, mouseButton -> {
+			openLink("https://gitlab.com/Aristois/Installer/builds/artifacts/master/browse/packager/free?job=build");
+		}, "Legacy installer").centerHorizontally());
 
 		new Thread(() -> {
 			InstallerAPI.fetchData(false);
 			loaded = true;
+			String jsonVersion = InstallerAPI.getJsonData().get("latestVersion").getAsString();
+			if (!jsonVersion.equals(Main.getVersion())) {
+				Main.getWindow().transitionForward(new UpdateScreen(jsonVersion));
+			}
 			button.setText("Continue");
 		}).start();
 	}

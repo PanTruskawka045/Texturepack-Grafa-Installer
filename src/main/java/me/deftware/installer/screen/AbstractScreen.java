@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.deftware.installer.Main;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +67,16 @@ public abstract class AbstractScreen {
 	public void charTyped(char charTyped) {
 		for (AbstractComponent component : componentList) {
 			component.charTyped(charTyped);
+		}
+	}
+
+	public static void openLink(String link) {
+		try {
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				Desktop.getDesktop().browse(new URI(link));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
