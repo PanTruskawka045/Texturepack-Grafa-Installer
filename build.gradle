@@ -29,11 +29,6 @@ repositories {
 }
 
 dependencies {
-    extraLibs 'com.google.code.gson:gson:2.8.6'
-    extraLibs 'org.apache.logging.log4j:log4j-api:2.11.0'
-    extraLibs 'org.apache.logging.log4j:log4j-core:2.11.0'
-    extraLibs group: 'commons-io', name: 'commons-io', version: '2.6'
-    extraLibs group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '5.0.4'
     extraLibs  'com.gitlab.Aristois:Installer:master-SNAPSHOT'
 
     // LWJGL
