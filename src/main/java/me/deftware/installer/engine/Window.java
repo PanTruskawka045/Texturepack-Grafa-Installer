@@ -4,6 +4,7 @@ import com.google.common.io.ByteStreams;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
+import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
@@ -150,7 +151,7 @@ public class Window implements Runnable {
 		if (windowHandle == MemoryUtil.NULL) throw new RuntimeException("Failed to create the GLFW window");
 
 		try {
-			PNGDecoder decoder = new PNGDecoder(ResourceUtils.getStreamFromResources("/assets/logo.png"));
+			PNGDecoder decoder = new PNGDecoder(Main.class.getResourceAsStream("/assets/logo.png"));
 			ByteBuffer buf = BufferUtils.createByteBuffer(decoder.getWidth() * decoder.getHeight() * 4);
 			decoder.decode(buf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
 			buf.flip();

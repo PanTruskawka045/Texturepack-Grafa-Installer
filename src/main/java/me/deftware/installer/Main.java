@@ -33,10 +33,8 @@ public class Main {
 				E.printStackTrace();
 			}
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			InputStream fontStream = ResourceUtils.getStreamFromResources("assets/sans.ttf");
-			Font customFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(fontStream));
+			Font customFont = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("/assets/sans.ttf"));
 			FontManager.registerCustomFont(customFont);
-			fontStream.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
