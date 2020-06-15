@@ -10,11 +10,17 @@ public class TransitionScreen extends AbstractScreen {
 	private String[] text;
 	private String title;
 	private Consumer<Boolean> callback;
+	private int delay;
 
 	public TransitionScreen(String title, Consumer<Boolean> callback, String... text) {
+		this(title, callback, 1500, text);
+	}
+
+	public TransitionScreen(String title, Consumer<Boolean> callback, int delay, String... text) {
 		this.title = title;
 		this.text = text;
 		this.callback = callback;
+		this.delay = delay;
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public class TransitionScreen extends AbstractScreen {
 			}
 			subText.fadeIn(alpha -> {
 				try {
-					Thread.sleep(1500);
+					Thread.sleep(delay);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

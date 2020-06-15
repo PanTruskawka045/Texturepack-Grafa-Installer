@@ -8,6 +8,8 @@ import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextComponent;
 
+import java.io.File;
+
 /**
  * @author Deftware
  */
@@ -48,10 +50,10 @@ public class InstallingScreen extends AbstractScreen {
 			Thread.currentThread().setName("Installer thread");
 			String result = "";
 			if (launcher.toLowerCase().contains("forge")) {
-				result = new ForgeInstaller().install(version, path);
+				result = new ForgeInstaller().install(version, path + File.separator);
 			} else {
-				AbstractJsonBuilder builder = version.getBuilder(launcher, launcher);
-				result = builder.install(builder.build(version), version, path);
+				AbstractJsonBuilder builder = version.getBuilder(launcher.substring(0, launcher.length() - " launcher".length()), launcher.substring(0, launcher.length() - " launcher".length()));
+				result = builder.install(builder.build(version), version, path + File.separator);
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {

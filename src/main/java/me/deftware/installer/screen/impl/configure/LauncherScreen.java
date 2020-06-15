@@ -9,6 +9,8 @@ import me.deftware.installer.screen.components.*;
 import me.deftware.installer.screen.impl.InstallingScreen;
 import me.deftware.installer.screen.impl.YesNoScreen;
 
+import java.io.File;
+
 public class LauncherScreen extends AbstractScreen {
 
 	private String version;
@@ -50,7 +52,18 @@ public class LauncherScreen extends AbstractScreen {
 							}
 						}, "Using a custom mod loader is not officially supported", "and you may crash or have stability issues.", "Do not report bugs when using one.", "", "If you still wish to use one, press \"Continue\""));
 					} else {
-						Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+						if (launcher.toLowerCase().contains("multimc")) {
+							File instancesFolder = new File(minecraftPath.getText() + File.separator + "instances" + File.separator);
+							if (!instancesFolder.exists()) {
+								Main.getWindow().transitionForward(new TransitionScreen("Uh oh! Incorrect path :(", button -> {
+									Main.getWindow().transitionBackwards(LauncherScreen.this);
+								}, 2300, "Please specify a valid MultiMC root directory", "for Aristois to use and install to", "", "You will be redirected back to select it."));
+							} else {
+								Main.getWindow().transitionForward(new MultiMCInstanceScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+							}
+						} else {
+							Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+						}
 					}
 				}).centerHorizontally(), minecraftPath);
 	}
