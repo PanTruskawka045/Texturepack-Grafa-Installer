@@ -11,7 +11,7 @@ apply plugin: "io.freefair.lombok"
 apply plugin: 'java'
 
 group 'me.deftware'
-version '1.0.0'
+version '1.9.2.2'
 
 def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toBoolean() : false
 
@@ -60,8 +60,11 @@ dependencies {
 }
 
 task copyToPackager(type: Copy) {
-    from 'build/libs/'
-    into 'packager/' + (donorBuild ? "donor" : "free") + "/"
+    from "build/libs/"
+    into 'packager/'
+    rename (
+          "installer-${version}.jar", (donorBuild ? "Aristois-Donor.jar" : "Aristois-Free.jar")
+    )
 }
 
 build.dependsOn(copyToPackager)
