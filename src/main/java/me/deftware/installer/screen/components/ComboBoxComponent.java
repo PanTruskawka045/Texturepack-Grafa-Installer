@@ -55,6 +55,10 @@ public class ComboBoxComponent extends AbstractComponent {
 		return items[index];
 	}
 
+	public boolean hasScrolling() {
+		return items.length + 1 >= 5;
+	}
+
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		RenderSystem.drawRect(x, y, x + width, y + (height * (expanded ? maxItems + 1 : 1)), Color.LIGHT_GRAY);
@@ -83,6 +87,12 @@ public class ComboBoxComponent extends AbstractComponent {
 				loopIndex++;
 			}
 			RenderSystem.drawLine(x, oriY + height - 1, x + width, oriY + height);
+			if (hasScrolling()) {
+				y = oriY;
+				float scrollbarWidth = 13, scrollerHeight = (height * (maxItems + 1)) / items.length, scrollerY = (y + height) + (indexOffset == 0 ? 0 : scrollerHeight * indexOffset);
+				RenderSystem.drawRect(x + width - scrollbarWidth, y + height, x + width - 1, y + (height * (maxItems + 1)) - 1, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter());
+				RenderSystem.drawRect(x + width - scrollbarWidth, scrollerY, x + width - 1, scrollerY + scrollerHeight, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter().brighter());
+			}
 		}
 	}
 

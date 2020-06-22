@@ -5,6 +5,9 @@ import me.deftware.installer.screen.components.TextComponent;
 
 import java.util.function.Consumer;
 
+/**
+ * @author Deftware
+ */
 public class TransitionScreen extends AbstractScreen {
 
 	private String[] text;

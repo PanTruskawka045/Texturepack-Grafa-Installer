@@ -2,13 +2,13 @@ package me.deftware.installer.screen.components;
 
 import com.google.common.io.ByteStreams;
 import lombok.Getter;
+import me.deftware.installer.Main;
 import me.deftware.installer.resources.GifDecoder;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
 import me.deftware.installer.screen.AbstractComponent;
 
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -17,32 +17,34 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Deftware
  */
-public class GifTextureComponent extends AbstractComponent {
+public class GifTextureComponent extends AbstractComponent<GifTextureComponent> {
 
 	private List<GifSlice> slices = new ArrayList<>();
 	private int delay = 0, index = 0;
 	private @Getter float width, height;
 	private int scale, speedOverride;
+	private boolean fillScreen = false;
+	private String asset;
 
 	public GifTextureComponent(float x, float y, String asset, int scale, int speedOverride) {
 		super(x, y);
 		this.scale = scale;
 		this.speedOverride = speedOverride;
-		try {
-			InputStream stream = ResourceUtils.getStreamFromResources(asset);
-			init(GifDecoder.read(ByteStreams.toByteArray(stream)));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.asset = asset;
 	}
 
-	private void init(GifDecoder.GifImage gif) {
+	public GifTextureComponent init() {
 		try {
+			GifDecoder.GifImage gif = GifDecoder.read(ByteStreams.toByteArray(ResourceUtils.getStreamFromResources(asset)));
 			for (int i = 0; i < gif.getFrameCount(); i++) {
 				BufferedImage img = gif.getFrame(i);
 				width = img.getWidth() / scale;
 				height = img.getHeight() / scale;
 				slices.add(new GifSlice(img, gif.getDelay(i), i));
+			}
+			if (fillScreen) {
+				width = Main.getWindow().windowWidth;
+				height = Main.getWindow().windowHeight;
 			}
 			Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
 				if (delay == slices.get(index).delay) {
@@ -55,6 +57,12 @@ public class GifTextureComponent extends AbstractComponent {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return this;
+	}
+
+	public GifTextureComponent setFillScreen(boolean fillScreen) {
+		this.fillScreen = fillScreen;
+		return this;
 	}
 
 	@Override
@@ -88,7 +96,11 @@ public class GifTextureComponent extends AbstractComponent {
 		int delay, index;
 
 		GifSlice(BufferedImage texture, int delay, int index) {
-			this.texture = ResourceUtils.loadTextureFromBufferedImage(texture, scale);
+			if (fillScreen) {
+				this.texture = ResourceUtils.loadTextureFromBufferedImage(texture, Main.getWindow().windowWidth, Main.getWindow().windowHeight);
+			} else {
+				this.texture = ResourceUtils.loadTextureFromBufferedImage(texture, scale);
+			}
 			this.delay = speedOverride == -1 ? delay : speedOverride;
 			this.index = index;
 		}

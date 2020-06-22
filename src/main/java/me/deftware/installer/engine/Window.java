@@ -1,13 +1,11 @@
 package me.deftware.installer.engine;
 
-import com.google.common.io.ByteStreams;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
-import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractScreen;
@@ -43,7 +41,7 @@ public class Window implements Runnable {
 	private boolean transitionForward = true;
 	private double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
 	private DoubleBuffer posX = BufferUtils.createDoubleBuffer(1), posY = BufferUtils.createDoubleBuffer(1);
-	public AbstractScreen currentScreen, transitionScreen;
+	public AbstractScreen currentScreen, transitionScreen, previousScreen;
 	private @Getter WindowDecorations windowDecorations;
 	private List<Runnable> renderThreadRunner = new ArrayList<>();
 
@@ -106,6 +104,7 @@ public class Window implements Runnable {
 	}
 
 	public void transitionForward(AbstractScreen screen) {
+		previousScreen = currentScreen;
 		renderThreadRunner.add(() -> {
 			screen.initSuper();
 			transitionForward = true;
@@ -117,6 +116,7 @@ public class Window implements Runnable {
 	}
 
 	public void transitionBackwards(AbstractScreen screen) {
+		previousScreen = currentScreen;
 		renderThreadRunner.add(() -> {
 			screen.initSuper();
 			transitionForward = false;
@@ -143,7 +143,7 @@ public class Window implements Runnable {
 			GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
 		}
 
-		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, "Aristois Installer " + (InstallerAPI.isDonorBuild() ? "donor edition" : ""), MemoryUtil.NULL, MemoryUtil.NULL);
+		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, InstallerAPI.isDonorBuild() ? "Donor edition" : "", MemoryUtil.NULL, MemoryUtil.NULL);
 		if (windowHandle == MemoryUtil.NULL) throw new RuntimeException("Failed to create the GLFW window");
 
 		try {
@@ -238,15 +238,13 @@ public class Window implements Runnable {
 		font.initialize(Color.white, "");
 
 		if (borderlessWindow) {
-			windowDecorations = new WindowDecorations("Aristois Installer " + (InstallerAPI.isDonorBuild() ? "donor edition" : ""));
+			windowDecorations = new WindowDecorations(InstallerAPI.isDonorBuild() ? "Donor edition" : "");
 		}
 
 		currentScreen = new WelcomeScreen();
 		currentScreen.initSuper();
 		while (!GLFW.glfwWindowShouldClose(windowHandle)) {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			if (borderlessWindow) windowDecorations.loop();
-
 			GLFW.glfwGetCursorPos(windowHandle, posX, posY);
 			mouseX = posX.get();
 			mouseY = posY.get();
@@ -269,6 +267,9 @@ public class Window implements Runnable {
 				transitionScreen.render(mouseX, mouseY);
 			}
 			font.drawString(4, windowHeight - font.getStringHeight("ABC") - 2, "aristois.net");
+
+			if (borderlessWindow) windowDecorations.loop();
+
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 			GLFW.glfwSwapBuffers(windowHandle);

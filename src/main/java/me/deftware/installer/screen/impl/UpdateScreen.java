@@ -4,6 +4,9 @@ import me.deftware.installer.Main;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.TextComponent;
 
+/**
+ * @author Deftware
+ */
 public class UpdateScreen extends AbstractScreen {
 
 	private String newVersion;
@@ -17,7 +20,7 @@ public class UpdateScreen extends AbstractScreen {
 		TextComponent titleComponent = new TextComponent(0, 0, "Product Sans", 35, "Uh oh! Outdated :(");
 		titleComponent.centerHorizontally().centerVertically(-130);
 		TextComponent subText = new TextComponent(0, 0, "Product Sans", 25, mouseButton -> {
-			openLink("");
+			openLink("https://aristois.net/download");
 		}, "This installer is out of date,", "but fear not! Click me to download the latest.", "", "Current installer version: " + Main.getVersion(), "Latest installer version: " + newVersion);
 		subText.centerHorizontally();
 		subText.setY(titleComponent.getY() + titleComponent.getHeight() + 10);

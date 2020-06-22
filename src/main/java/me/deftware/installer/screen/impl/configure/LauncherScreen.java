@@ -12,6 +12,9 @@ import me.deftware.installer.screen.impl.YesNoScreen;
 
 import java.io.File;
 
+/**
+ * @author Deftware
+ */
 public class LauncherScreen extends AbstractScreen {
 
 	private String version;
@@ -63,7 +66,27 @@ public class LauncherScreen extends AbstractScreen {
 								Main.getWindow().transitionForward(new MultiMCInstanceScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
 							}
 						} else {
-							Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+							File mcDir = new File(minecraftPath.getText());
+							boolean proceed = true;
+							if (!mcDir.exists()) {
+								proceed = false;
+							} else {
+								// Make sure its an actual mc directory
+								if (!new File(mcDir.getAbsolutePath() + File.separator + "versions" + File.separator).exists()) {
+									proceed = false;
+								}
+							}
+							if (proceed) {
+								Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+							} else {
+								Main.getWindow().transitionForward(new YesNoScreen("Are you sure this is correct?", confirm -> {
+									if (confirm) {
+										Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
+									} else {
+										Main.getWindow().transitionBackwards(LauncherScreen.this);
+									}
+								}, "The Minecraft directory you have chosen", "appears to not contain necessary files required for", "Minecraft to run, do you still want to proceed with this path?"));
+							}
 						}
 					}
 				}).centerHorizontally(), minecraftPath);

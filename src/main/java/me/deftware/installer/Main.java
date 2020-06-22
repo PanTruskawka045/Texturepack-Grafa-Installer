@@ -3,15 +3,12 @@ package me.deftware.installer;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.engine.Window;
-import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.font.FontManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLClassLoader;
-import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 

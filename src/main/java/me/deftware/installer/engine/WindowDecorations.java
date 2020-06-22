@@ -68,7 +68,7 @@ public class WindowDecorations {
 			yPos.clear();
 			xPos.clear();
 		}
-		RenderSystem.drawRect(0, 0, Main.getWindow().windowWidth, titleBarHeight, new Color(19,29,39));
+		//RenderSystem.drawRect(0, 0, Main.getWindow().windowWidth, titleBarHeight, new Color(19,29,39));
 		font.drawStringWithShadow(centeredTitle ? (Main.getWindow().windowWidth / 2) - (font.getStringWidth(windowTitle) / 2) : (titleBarHeight / 2) - (font.getStringHeight(windowTitle) / 2), (titleBarHeight / 2) - (font.getStringHeight(windowTitle) / 2), windowTitle);
 		// Exit button
 		RenderSystem.drawLine(Main.getWindow().windowWidth - navButtonsSize - offset, offset, Main.getWindow().windowWidth - offset, offset + navButtonsSize);

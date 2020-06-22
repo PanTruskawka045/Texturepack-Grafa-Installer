@@ -33,6 +33,9 @@ public class ResourceUtils {
 			}
 		}
 		try {
+			if (resourcePath.startsWith("/")) {
+				resourcePath = resourcePath.substring(1);
+			}
 			ZipFile zipFile = new ZipFile(LocationUtil.getClassPhysicalLocation(Main.class).toFile());
 			ZipEntry entry = zipFile.getEntry(resourcePath);
 			InputStream in = zipFile.getInputStream(entry);
@@ -45,6 +48,10 @@ public class ResourceUtils {
 
 	public static Texture loadTexture(String fileName) throws Exception {
 		return loadTexture(fileName, 1);
+	}
+
+	public static Texture loadTextureFromBufferedImage(BufferedImage image, float width, float height) {
+		return new Texture(GraphicsUtil.loadTextureFromBufferedImage(image), width, height, 1f);
 	}
 
 	public static Texture loadTextureFromBufferedImage(BufferedImage image, float scale) {

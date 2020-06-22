@@ -7,9 +7,12 @@ import me.deftware.installer.screen.components.TextComponent;
 
 import java.util.function.Consumer;
 
+/**
+ * @author Deftware
+ */
 public class YesNoScreen extends AbstractScreen {
 
-	private @Setter String rightButton = "Continue", leftButton = "Go back";
+	private String rightButton = "Continue", leftButton = "Go back";
 
 	private String[] text;
 	private String title;
@@ -19,6 +22,16 @@ public class YesNoScreen extends AbstractScreen {
 		this.title = title;
 		this.text = text;
 		this.callback = callback;
+	}
+
+	public YesNoScreen setRightButton(String rightButton) {
+		this.rightButton = rightButton;
+		return this;
+	}
+
+	public YesNoScreen setLeftButton(String leftButton) {
+		this.leftButton = leftButton;
+		return this;
 	}
 
 	@Override
