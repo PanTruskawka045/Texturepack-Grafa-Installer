@@ -94,4 +94,10 @@ public abstract class AbstractScreen {
 
 	public abstract void init();
 
+	public void initSuper() {
+		if (!initialized) {
+			initialized = true;
+			init();
+		}
+	}
 }

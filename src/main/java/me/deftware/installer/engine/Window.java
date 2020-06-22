@@ -19,12 +19,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -111,7 +107,7 @@ public class Window implements Runnable {
 
 	public void transitionForward(AbstractScreen screen) {
 		renderThreadRunner.add(() -> {
-			screen.init();
+			screen.initSuper();
 			transitionForward = true;
 			counter = 0;
 			i = 0;
@@ -122,7 +118,7 @@ public class Window implements Runnable {
 
 	public void transitionBackwards(AbstractScreen screen) {
 		renderThreadRunner.add(() -> {
-			screen.init();
+			screen.initSuper();
 			transitionForward = false;
 			counter = 0;
 			i = 0;
@@ -246,7 +242,7 @@ public class Window implements Runnable {
 		}
 
 		currentScreen = new WelcomeScreen();
-		currentScreen.init();
+		currentScreen.initSuper();
 		while (!GLFW.glfwWindowShouldClose(windowHandle)) {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			if (borderlessWindow) windowDecorations.loop();

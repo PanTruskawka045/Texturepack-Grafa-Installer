@@ -1,4 +1,4 @@
-package me.deftware.installer.screen.impl.configure;
+package me.deftware.installer.screen.impl;
 
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.TextComponent;

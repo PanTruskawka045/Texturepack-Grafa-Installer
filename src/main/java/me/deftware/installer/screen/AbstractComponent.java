@@ -6,7 +6,7 @@ import lombok.Setter;
 /**
  * @author Deftware
  */
-public abstract class AbstractComponent {
+public abstract class AbstractComponent<T> {
 
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
@@ -34,25 +34,25 @@ public abstract class AbstractComponent {
 
 	public abstract void onScroll(double xPos, double yPos);
 
-	public AbstractComponent centerHorizontally(float offset) {
+	public AbstractComponent<T> centerHorizontally(float offset) {
 		x = ((AbstractScreen.getWindowWidth() / 2) - (getWidth() / 2)) + offset;
 		return this;
 	}
 
-	public AbstractComponent centerHorizontally() {
+	public AbstractComponent<T> centerHorizontally() {
 		return centerHorizontally(0);
 	}
 
-	public AbstractComponent centerVertically(float offset) {
+	public AbstractComponent<T> centerVertically(float offset) {
 		y = (AbstractScreen.getWindowHeight() / 2) - (getHeight() / 2) + offset;
 		return this;
 	}
 
-	public AbstractComponent centerVertically() {
+	public AbstractComponent<T> centerVertically() {
 		return centerVertically(0);
 	}
 
-	public AbstractComponent center() {
+	public AbstractComponent<T> center() {
 		return centerHorizontally().centerVertically();
 	}
 

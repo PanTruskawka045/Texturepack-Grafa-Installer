@@ -7,6 +7,7 @@ import me.deftware.installer.OSUtils;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.*;
 import me.deftware.installer.screen.impl.InstallingScreen;
+import me.deftware.installer.screen.impl.TransitionScreen;
 import me.deftware.installer.screen.impl.YesNoScreen;
 
 import java.io.File;
@@ -39,12 +40,12 @@ public class LauncherScreen extends AbstractScreen {
 		minecraftPath.setShadowText("Minecraft path...");
 		minecraftPath.centerHorizontally();
 
-		addComponent(new TextComponent(0, 65, "Product Sans", 50, "Please select launcher").centerHorizontally(),
-				new TextComponent(0, 130, "Product Sans", 25, "And where you would like Aristois to be installed", "Press \"Continue\" to for a default Minecraft install").centerHorizontally(),
+		addComponent(new TextComponent(0, 65, "Product Sans", 40, "Launcher & Directory").centerHorizontally(),
+				new TextComponent(0, 130, "Product Sans", 25, "Select your launcher and Minecraft directory.", "Press \"Continue\" for a default installation:").centerHorizontally(),
 				launcherBox, new ButtonComponent(50, 400, 100, 50, "Continue", mouseButton -> {
 					String launcher = launcherBox.getSelectedItem();
 					if (launcher.toLowerCase().contains("mod loader")) {
-						Main.getWindow().transitionForward(new YesNoScreen("Warning! This may cause issues", confirm -> {
+						Main.getWindow().transitionForward(new YesNoScreen("Warning! This may cause issues.", confirm -> {
 							if (!confirm) {
 								Main.getWindow().transitionBackwards(LauncherScreen.this);
 							} else {
@@ -55,9 +56,9 @@ public class LauncherScreen extends AbstractScreen {
 						if (launcher.toLowerCase().contains("multimc")) {
 							File instancesFolder = new File(minecraftPath.getText() + File.separator + "instances" + File.separator);
 							if (!instancesFolder.exists()) {
-								Main.getWindow().transitionForward(new TransitionScreen("Uh oh! Incorrect path :(", button -> {
+								Main.getWindow().transitionForward(new TransitionScreen("Uh oh! Invalid path :(", button -> {
 									Main.getWindow().transitionBackwards(LauncherScreen.this);
-								}, 2300, "Please specify a valid MultiMC root directory", "for Aristois to use and install to", "", "You will be redirected back to select it."));
+								}, 3000, "Please specify a valid MultiMC root directory.", "", "You will be redirected back to select it."));
 							} else {
 								Main.getWindow().transitionForward(new MultiMCInstanceScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
 							}

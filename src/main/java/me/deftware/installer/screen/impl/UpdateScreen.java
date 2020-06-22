@@ -18,7 +18,7 @@ public class UpdateScreen extends AbstractScreen {
 		titleComponent.centerHorizontally().centerVertically(-130);
 		TextComponent subText = new TextComponent(0, 0, "Product Sans", 25, mouseButton -> {
 			openLink("");
-		}, "This installer is out of date, but fear", "not you can download the latest version", "of this installer by Clicking me to download it.", "", "This installer is on version " + Main.getVersion(), "New one is version " + newVersion);
+		}, "This installer is out of date,", "but fear not! Click me to download the latest.", "", "Current installer version: " + Main.getVersion(), "Latest installer version: " + newVersion);
 		subText.centerHorizontally();
 		subText.setY(titleComponent.getY() + titleComponent.getHeight() + 10);
 		addComponent(titleComponent, subText);

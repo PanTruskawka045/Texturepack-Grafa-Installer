@@ -19,7 +19,6 @@ public class InstallingScreen extends AbstractScreen {
 	private String path, launcher;
 	private TextComponent textComponent, subText;
 	private ButtonComponent button;
-	private String[] installStatus;
 	private int count = 0;
 
 	public InstallingScreen(VersionData version, String path, String launcher) {
@@ -28,17 +27,12 @@ public class InstallingScreen extends AbstractScreen {
 		this.launcher = launcher;
 	}
 
-	private void updateStatus(String... status) {
-		installStatus = status;
-
-	}
-
 	@Override
 	public void init() {
 		componentList.clear();
-		textComponent = new TextComponent(0, 0, "Product Sans", 60, "Greatness is coming");
+		textComponent = new TextComponent(0, 0, "Product Sans", 40, "Greatness is coming!");
 		textComponent.centerHorizontally().centerVertically(-20);
-		subText = new TextComponent(0, textComponent.getY() + textComponent.getHeight() + 10, "Product Sans", 40, "for Aristois is being installed...");
+		subText = new TextComponent(0, textComponent.getY() + textComponent.getHeight() + 10, "Product Sans", 30, "Aristois is being installed...");
 		subText.centerHorizontally();
 		button = new ButtonComponent(0, Main.getWindow().windowHeight - 110, 220, 50, "Install another version", mouseButton -> {
 			Main.getWindow().transitionForward(new WelcomeScreen());
