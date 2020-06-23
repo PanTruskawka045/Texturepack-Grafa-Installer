@@ -13,7 +13,7 @@ apply plugin: 'java'
 group 'me.deftware'
 version '1.9.2.2'
 
-def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toBoolean() : true
+def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toBoolean() : false
 
 sourceCompatibility = 1.8
 
