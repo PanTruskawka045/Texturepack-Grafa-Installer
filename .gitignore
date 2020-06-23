@@ -4,3 +4,7 @@ build/
 packager/
 debug.log
 installer.log
+.DS_STORE
+javacore*
+jitdump*
+Snap*

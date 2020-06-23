@@ -2,6 +2,7 @@ package me.deftware.installer;
 
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
+import me.deftware.aristois.installer.ui.InstallerUI;
 import me.deftware.installer.engine.Window;
 import me.deftware.installer.resources.font.FontManager;
 
@@ -34,8 +35,13 @@ public class Main {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		window = new Window();
-		window.run();
+		if (OSUtils.isMac()) {
+			InstallerAPI.fetchData(false);
+			InstallerUI.create().setVisible(true);
+		} else {
+			window = new Window();
+			window.run();
+		}
 	}
 
 }
