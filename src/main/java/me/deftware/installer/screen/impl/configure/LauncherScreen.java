@@ -85,7 +85,7 @@ public class LauncherScreen extends AbstractScreen {
 									} else {
 										Main.getWindow().transitionBackwards(LauncherScreen.this);
 									}
-								}, "The Minecraft directory you have chosen", "appears to not contain necessary files required for", "Minecraft to run, do you still want to proceed with this path?"));
+								}, "The Minecraft directory you have chosen", "does not appear to contain the necessary files required for", "Minecraft to run, do you still want to proceed with this path?"));
 							}
 						}
 					}

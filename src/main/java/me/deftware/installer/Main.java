@@ -8,7 +8,6 @@ import me.deftware.installer.resources.font.FontManager;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -21,10 +20,10 @@ public class Main {
 	public @Getter static Window window;
 
 	public static void main(String[] args) {
+		System.out.println("Running Java " + System.getProperty("java.version"));
 		try {
 			try {
-				Attributes attr =
-						new Manifest(((URLClassLoader) InstallerAPI.class.getClassLoader()).findResource("META-INF/MANIFEST.MF").openStream()).getMainAttributes();
+				Attributes attr = new Manifest(Main.class.getResourceAsStream("/META-INF/MANIFEST.MF")).getMainAttributes();
 				InstallerAPI.setDonorBuild(Boolean.parseBoolean(attr.getValue("donorBuild")));
 			} catch (IOException E) {
 				E.printStackTrace();
