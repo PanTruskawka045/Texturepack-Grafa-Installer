@@ -39,8 +39,14 @@ public class Main {
 			InstallerAPI.fetchData(false);
 			InstallerUI.create().setVisible(true);
 		} else {
-			window = new Window();
-			window.run();
+			try {
+				window = new Window();
+				window.run();
+			} catch (Throwable e) {
+				System.out.println("Opening in legacy mode");
+				InstallerAPI.fetchData(false);
+				InstallerUI.create().setVisible(true);
+			}
 		}
 	}
 
