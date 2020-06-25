@@ -36,16 +36,16 @@ public class Main {
 			ex.printStackTrace();
 		}
 		if (OSUtils.isMac()) {
+			// macOS just shouldn't run opengl
 			InstallerAPI.fetchData(false);
 			InstallerUI.create().setVisible(true);
 		} else {
 			try {
 				window = new Window();
 				window.run();
-			} catch (Throwable e) {
-				System.out.println("Opening in legacy mode");
-				InstallerAPI.fetchData(false);
-				InstallerUI.create().setVisible(true);
+			} catch (Throwable ex) {
+				System.out.println("Fatal error");
+				ex.printStackTrace();
 			}
 		}
 	}

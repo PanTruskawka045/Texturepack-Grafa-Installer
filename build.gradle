@@ -35,23 +35,18 @@ dependencies {
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-tinyfd', version:'3.2.3'
 
     // Natives
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3', classifier:'natives-windows'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3', classifier:'natives-windows'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3', classifier:'natives-windows'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3', classifier:'natives-windows'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-tinyfd', version:'3.2.3', classifier:'natives-windows'
 
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3', classifier:'natives-linux'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3', classifier:'natives-linux'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3', classifier:'natives-linux'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3', classifier:'natives-linux'
-
-    extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3', classifier:'natives-macos'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.2.3', classifier:'natives-macos'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3', classifier:'natives-macos'
-    extraLibs group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.2.3', classifier:'natives-macos'
+    extraLibs group: 'org.lwjgl', name: 'lwjgl-tinyfd', version:'3.2.3', classifier:'natives-linux'
 
     extraLibs group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
     extraLibs group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'

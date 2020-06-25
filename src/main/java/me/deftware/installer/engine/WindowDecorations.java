@@ -58,7 +58,8 @@ public class WindowDecorations {
 	public void loop() {
 		int offset = 10;
 		if (buttonEvent == 1 && Main.getWindow().mouseY < titleBarHeight) {
-			if (Main.getWindow().mouseX > Main.getWindow().windowWidth - offset - navButtonsSize) {
+			if (Main.getWindow().mouseX > Main.getWindow().windowWidth - offset - navButtonsSize && Main.getWindow().mouseX < Main.getWindow().windowWidth - offset &&
+					Main.getWindow().mouseY > offset && Main.getWindow().mouseY < offset + navButtonsSize) {
 				GLFW.glfwSetWindowShouldClose(Main.getWindow().getWindowHandle(), true);
 			}
 			GLFW.glfwGetWindowPos(Main.getWindow().getWindowHandle(), xPos, yPos);

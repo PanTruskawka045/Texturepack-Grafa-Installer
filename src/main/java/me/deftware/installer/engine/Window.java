@@ -3,6 +3,7 @@ package me.deftware.installer.engine;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
+import me.deftware.aristois.installer.ui.InstallerUI;
 import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.resources.RenderSystem;
@@ -131,9 +132,18 @@ public class Window implements Runnable {
 		return transitionScreen != null;
 	}
 
+	public void openLegacy() {
+		System.out.println("Opening in legacy mode");
+		InstallerAPI.fetchData(false);
+		InstallerUI.create().setVisible(true);
+	}
+
 	private void init() {
 		GLFWErrorCallback.createPrint(System.err).set();
-		if (!GLFW.glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
+		if (!GLFW.glfwInit()) {
+			openLegacy();
+			return;
+		}
 
 		GLFW.glfwDefaultWindowHints();
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
@@ -144,7 +154,10 @@ public class Window implements Runnable {
 		}
 
 		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, InstallerAPI.isDonorBuild() ? "Donor edition" : "", MemoryUtil.NULL, MemoryUtil.NULL);
-		if (windowHandle == MemoryUtil.NULL) throw new RuntimeException("Failed to create the GLFW window");
+		if (windowHandle == MemoryUtil.NULL) {
+			openLegacy();
+			return;
+		}
 
 		try {
 			PNGDecoder decoder = new PNGDecoder(Main.class.getResourceAsStream("/assets/logo.png"));
@@ -268,7 +281,9 @@ public class Window implements Runnable {
 			}
 			font.drawString(4, windowHeight - font.getStringHeight("ABC") - 2, "aristois.net");
 
-			if (borderlessWindow) windowDecorations.loop();
+			if (borderlessWindow){
+				windowDecorations.loop();
+			}
 
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 

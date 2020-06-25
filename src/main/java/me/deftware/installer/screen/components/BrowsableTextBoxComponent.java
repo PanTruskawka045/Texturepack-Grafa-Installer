@@ -1,12 +1,8 @@
 package me.deftware.installer.screen.components;
 
-import me.deftware.installer.Main;
 import me.deftware.installer.engine.ColorPalette;
 import me.deftware.installer.resources.RenderSystem;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 /**
  * @author Deftware
@@ -28,20 +24,10 @@ public class BrowsableTextBoxComponent extends TextBoxComponent {
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
 		if (x > getX() + width - height && x < x + width && y > getY() && y < getY() + height) {
-			new Thread(() -> {
-				Main.getWindow().shouldRun = false;
-				JFrame frame = new JFrame();
-				frame.setAlwaysOnTop(true);
-				JFileChooser fc = new JFileChooser();
-				fc.setCurrentDirectory(new File("."));
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				fc.setDialogTitle("Select minecraft directory");
-				int returnVal = fc.showSaveDialog(frame);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					text = fc.getSelectedFile().getAbsolutePath();
-				}
-				Main.getWindow().shouldRun = true;
-			}).start();
+			String folder = TinyFileDialogs.tinyfd_selectFolderDialog("Select path", "");
+			if (folder != null && !folder.isEmpty()) {
+				text = folder;
+			}
 			return true;
 		}
 		return super.mouseClicked(x, y, mouseButton);
