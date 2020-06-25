@@ -135,15 +135,18 @@ public class Window implements Runnable {
 	}
 
 	public static void openLegacy() {
-		System.out.println("Opening in legacy mode");
-		legacyOpen = true;
-		InstallerAPI.fetchData(false);
-		InstallerUI.create().setVisible(true);
+		if (!legacyOpen) {
+			System.out.println("Opening in legacy mode");
+			legacyOpen = true;
+			InstallerAPI.fetchData(false);
+			InstallerUI.create().setVisible(true);
+		}
 	}
 
 	private void init() {
 		GLFWErrorCallback.createPrint(System.err).set();
 		if (!GLFW.glfwInit()) {
+			System.err.println("Failed to init glfw");
 			openLegacy();
 			return;
 		}
@@ -158,6 +161,7 @@ public class Window implements Runnable {
 
 		windowHandle = GLFW.glfwCreateWindow(windowWidth, windowHeight, InstallerAPI.isDonorBuild() ? "Donor edition" : "", MemoryUtil.NULL, MemoryUtil.NULL);
 		if (windowHandle == MemoryUtil.NULL) {
+			System.err.println("NULL window handle");
 			openLegacy();
 			return;
 		}
