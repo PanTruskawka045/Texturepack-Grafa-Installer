@@ -37,7 +37,7 @@ public class Window implements Runnable {
 
 	public @Getter long windowHandle;
 	public @Getter double mouseX, mouseY;
-	public @Getter boolean borderlessWindow = true;
+	public static @Getter boolean borderlessWindow = true, legacyOpen = false;
 	public int windowWidth = 800, windowHeight = 500;
 	private boolean transitionForward = true;
 	private double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
@@ -77,7 +77,9 @@ public class Window implements Runnable {
 
 		GLFW.glfwTerminate();
 		Objects.requireNonNull(GLFW.glfwSetErrorCallback(null)).free();
-		System.exit(0);
+		if (!legacyOpen) {
+			System.exit(0);
+		}
 	}
 
 	private void handleTransition() {
@@ -134,6 +136,7 @@ public class Window implements Runnable {
 
 	public static void openLegacy() {
 		System.out.println("Opening in legacy mode");
+		legacyOpen = true;
 		InstallerAPI.fetchData(false);
 		InstallerUI.create().setVisible(true);
 	}
