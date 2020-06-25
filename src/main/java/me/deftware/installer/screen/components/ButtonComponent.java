@@ -21,6 +21,9 @@ public class ButtonComponent extends AbstractComponent {
 	private @Getter @Setter String text;
 	private Consumer<Integer> onClick;
 	private @Setter boolean visible = true;
+	private Color currentColor = ColorPalette.BRIGHT_BACKGROUND_COLOR;
+	private boolean mouseOver = false;
+	private float ratio = 0.5f;
 
 	public ButtonComponent(float x, float y, float width, float height, String text, Consumer<Integer> onClick) {
 		super(x, y);
@@ -35,15 +38,29 @@ public class ButtonComponent extends AbstractComponent {
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		if (visible) {
-			RenderSystem.drawRect(x, y, x + width, y + height, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-			RenderSystem.drawCircle(x, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-			RenderSystem.drawCircle(x + width, y + 25, 25, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-			font.drawStringWithShadow((int) (x + ((width / 2) - (font.getStringWidth(text) / 2))), (int) (y + ((height / 2) - (font.getStringHeight(text) / 2))), text);
+			Color bgColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), alpha);
+			RenderSystem.drawRect(x, y, x + width, y + height, bgColor);
+			RenderSystem.drawCircle(x, y + 25, 25, bgColor);
+			RenderSystem.drawCircle(x + width, y + 25, 25, bgColor);
+			font.drawString((int) (x + ((width / 2) - (font.getStringWidth(text) / 2))), (int) (y + ((height / 2) - (font.getStringHeight(text) / 2))), text, new Color(255, 255, 255, alpha));
+			mouseOver = mouseX > getX() && mouseX < getX() + width && mouseY > getY() && mouseY < getY() + height;
 		}
 	}
 
 	@Override
-	public void update() { }
+	public void update() {
+		super.update();
+		if (mouseOver) {
+			if (ratio > 0.4f) {
+				ratio -= 0.02f;
+			}
+		} else {
+			if (ratio < 0.5f) {
+				ratio += 0.02f;
+			}
+		}
+		currentColor = ColorPalette.blend(ratio, ColorPalette.BACKGROUND_COLOR.brighter().brighter(), ColorPalette.BRIGHT_BACKGROUND_COLOR);
+	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {

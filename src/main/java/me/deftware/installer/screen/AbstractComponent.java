@@ -3,6 +3,8 @@ package me.deftware.installer.screen;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.function.Consumer;
+
 /**
  * @author Deftware
  */
@@ -10,6 +12,16 @@ public abstract class AbstractComponent<T> {
 
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
+
+
+	/**
+	 * 0 = Not enabled
+	 * 1 = Fade in
+	 * 2 = Fade out
+	 */
+	protected @Getter @Setter int fadeStatus = 0, alpha = 255;
+	protected double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
+	protected Consumer<Integer> fadeCallback;
 
 	public AbstractComponent(float x, float y) {
 		this.x = x;
@@ -22,7 +34,23 @@ public abstract class AbstractComponent<T> {
 
 	public abstract void render(float x, float y, double mouseX, double mouseY);
 
-	public abstract void update();
+	public void update() {
+		if (fadeStatus != 0) {
+			if (i <= 1 && (fadeStatus == 2 && alpha > 3 || fadeStatus == 1 && alpha < 255)) {
+				double current = Math.sin(counter) * (255 / iterations * counter);
+				alpha = (int) (fadeStatus == 2 ? alpha - current : alpha + current);
+				counter += increase;
+				i += 1 / iterations;
+			} else {
+				fadeStatus = 0;
+				i = 0;
+				counter = 0;
+				if (fadeCallback != null) {
+					fadeCallback.accept(alpha);
+				}
+			}
+		}
+	}
 
 	public abstract boolean mouseClicked(double x, double y, int mouseButton);
 
@@ -54,6 +82,16 @@ public abstract class AbstractComponent<T> {
 
 	public AbstractComponent<T> center() {
 		return centerHorizontally().centerVertically();
+	}
+
+	public void fadeOut(Consumer<Integer> callback) {
+		fadeCallback = callback;
+		fadeStatus = 2;
+	}
+
+	public void fadeIn(Consumer<Integer> callback) {
+		fadeCallback = callback;
+		fadeStatus = 1;
 	}
 
 }

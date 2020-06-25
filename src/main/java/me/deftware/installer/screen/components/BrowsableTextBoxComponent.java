@@ -23,7 +23,7 @@ public class BrowsableTextBoxComponent extends TextBoxComponent {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > getX() + width - height && x < x + width && y > getY() && y < getY() + height) {
+		if (x > getX() + width - height && x < getX() + width && y > getY() && y < getY() + height) {
 			String folder = TinyFileDialogs.tinyfd_selectFolderDialog("Select path", "");
 			if (folder != null && !folder.isEmpty()) {
 				text = folder;

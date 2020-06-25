@@ -37,6 +37,7 @@ public class InstallingScreen extends AbstractScreen {
 		button = new ButtonComponent(0, Main.getWindow().windowHeight - 110, 220, 50, "Install another version", mouseButton -> {
 			Main.getWindow().transitionForward(new WelcomeScreen());
 		});
+		button.setAlpha(1);
 		button.setVisible(false);
 		addComponent(textComponent, subText, button.centerHorizontally());
 
@@ -74,6 +75,7 @@ public class InstallingScreen extends AbstractScreen {
 			subText.setY(textComponent.getY() + textComponent.getHeight() + 10);
 			textComponent.fadeIn(aplha -> {
 				button.setVisible(true);
+				button.fadeIn(alpha -> {});
 			});
 			subText.fadeIn(null);
 		}
