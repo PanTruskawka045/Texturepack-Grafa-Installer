@@ -8,7 +8,7 @@ build:
   script:
     - ./gradlew build
     - ./gradlew clean
-    - ./gradlew build -Pdonorbuild=true
+    - ./gradlew build -Pdonorbuild="true"
   artifacts:
     paths:
       - packager/*

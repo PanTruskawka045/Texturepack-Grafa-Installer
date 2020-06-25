@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
@@ -13,7 +15,7 @@ apply plugin: 'java'
 group 'me.deftware'
 version '1.9.2.3'
 
-def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toBoolean() : false
+def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toString() : "false"
 
 sourceCompatibility = 1.8
 
@@ -65,7 +67,7 @@ task copyToPackager(type: Copy) {
     from "build/libs/"
     into 'packager/'
     rename (
-          "installer-${version}.jar", (donorBuild ? "Aristois-Donor.jar" : "Aristois-Free.jar")
+          "installer-${version}.jar", (donorBuild == "true" ? "Aristois-Donor.jar" : "Aristois-Free.jar")
     )
 }
 
@@ -76,9 +78,17 @@ jar {
         configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
     }
     manifest.attributes(
-            "donorBuild": donorBuild,
             "build_date": new Date().format('yyyy/MM/dd HH:mm'),
             "Main-Class": 'me.deftware.installer.Main',
             "Manifest-Version": 1.0
     )
 }
+
+def copyDir = "$compileJava.temporaryDir/replaced"
+task tokenReplace(type: Copy) {
+    from(sourceSets.main.java.sourceDirectories)
+    into copyDir
+    filter(ReplaceTokens, tokens: [DONOR: donorBuild])
+}
+compileJava.setSource(copyDir)
+compileJava.dependsOn(tokenReplace)

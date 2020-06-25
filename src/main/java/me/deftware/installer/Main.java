@@ -8,15 +8,13 @@ import me.deftware.installer.resources.font.FontManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 /**
  * @author Deftware
  */
 public class Main {
 
+	public static String donorString = "@DONOR@";
 	public @Getter static String version = "1.9.2.3";
 	public @Getter static Window window;
 
@@ -32,13 +30,9 @@ public class Main {
 		System.out.println("Running Java " + System.getProperty("java.version"));
 		System.out.println("OS arch " + System.getProperty("os.arch"));
 		System.out.println("Installer version " + version);
+		System.out.println("Donor build " + donorString);
+		InstallerAPI.setDonorBuild(Boolean.parseBoolean(donorString));
 		try {
-			try {
-				Attributes attr = new Manifest(Main.class.getResourceAsStream("/META-INF/MANIFEST.MF")).getMainAttributes();
-				InstallerAPI.setDonorBuild(Boolean.parseBoolean(attr.getValue("donorBuild")));
-			} catch (IOException E) {
-				E.printStackTrace();
-			}
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			Font customFont = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("/assets/sans.ttf"));
 			FontManager.registerCustomFont(customFont);
