@@ -37,15 +37,14 @@ public class Main {
 		}
 		if (OSUtils.isMac()) {
 			// macOS just shouldn't run opengl
-			InstallerAPI.fetchData(false);
-			InstallerUI.create().setVisible(true);
+			Window.openLegacy();
 		} else {
 			try {
 				window = new Window();
 				window.run();
 			} catch (Throwable ex) {
-				System.out.println("Fatal error");
 				ex.printStackTrace();
+				Window.openLegacy();
 			}
 		}
 	}

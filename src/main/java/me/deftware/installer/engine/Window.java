@@ -132,7 +132,7 @@ public class Window implements Runnable {
 		return transitionScreen != null;
 	}
 
-	public void openLegacy() {
+	public static void openLegacy() {
 		System.out.println("Opening in legacy mode");
 		InstallerAPI.fetchData(false);
 		InstallerUI.create().setVisible(true);
