@@ -37,7 +37,7 @@ public class Window implements Runnable {
 
 	public @Getter long windowHandle;
 	public @Getter double mouseX, mouseY;
-	public static @Getter boolean borderlessWindow = false, legacyOpen = false;
+	public static @Getter boolean borderlessWindow = true, legacyOpen = false;
 	public int windowWidth = 800, windowHeight = 500;
 	private boolean transitionForward = true;
 	private double iterations = 50, i = 0, counter = 0, increase = Math.PI / iterations;
