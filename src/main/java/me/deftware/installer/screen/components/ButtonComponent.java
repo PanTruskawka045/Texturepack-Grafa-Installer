@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * @author Deftware
  */
-public class ButtonComponent extends AbstractComponent {
+public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 
 	private @Getter float width, height;
 	private BitmapFont font;

@@ -20,11 +20,13 @@ public class ComboBoxComponent extends AbstractComponent {
 
 	private Texture arrow;
 	private BitmapFont font;
-	private @Getter float width, height;
+	private @Getter float width, height, scrollbarWidth = 17, scrollbarHeight = 45, scrollbarY = 0;
 	private @Getter @Setter int index = 0, hoverIndex = 0, maxItems = 5, indexOffset = 0;
 	private String[] items;
-	private boolean expanded = false;
+	private boolean expanded = false, scrollbarDrag = false;
 	private @Setter Consumer<String> itemChangedCallback;
+	private double prevMouseY = 0;
+	private long lastMouseCompare = System.currentTimeMillis();
 
 	public ComboBoxComponent(float x, float y, float width, int size, String font, String... items) {
 		super(x, y);
@@ -77,7 +79,7 @@ public class ComboBoxComponent extends AbstractComponent {
 			hoverIndex = -1;
 			for (String item : items) {
 				if (loopIndex >= indexOffset && loopIndex - indexOffset < maxItems) {
-					if (mouseY > y - 1 && mouseY < y + 6 + font.getStringHeight(getSelectedItem()) && mouseX > x && mouseX < x + width) {
+					if (mouseY > y - 1 && mouseY < y + 6 + font.getStringHeight(getSelectedItem()) && mouseX > x && mouseX < x + width - scrollbarWidth) {
 						RenderSystem.drawRect(x + 1, y - 1, x + width - 1, y + 5 + font.getStringHeight(getSelectedItem()), ColorPalette.BRIGHT_BACKGROUND_COLOR);
 						hoverIndex = loopIndex;
 					}
@@ -89,11 +91,16 @@ public class ComboBoxComponent extends AbstractComponent {
 			RenderSystem.drawLine(x, oriY + height - 1, x + width, oriY + height);
 			if (hasScrolling()) {
 				y = oriY;
-				float scrollbarWidth = 13, scrollerHeight = (height * (maxItems + 1)) / items.length, scrollerY = (y + height) + (indexOffset == 0 ? 0 : scrollerHeight * indexOffset);
-				RenderSystem.drawRect(x + width - scrollbarWidth, y + height, x + width - 1, y + (height * (maxItems + 1)) - 1, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter());
-				RenderSystem.drawRect(x + width - scrollbarWidth, scrollerY, x + width - 1, scrollerY + scrollerHeight, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter().brighter());
+				RenderSystem.drawRect(x + width - scrollbarWidth, y + height + 1, x + width - 1, y + (height * (maxItems + 1)) - 1, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter());
+				if (indexOffset != 0) {
+					float offset = maxItems * height / items.length;
+					y += indexOffset * offset;
+				}
+				scrollbarY = y;
+				RenderSystem.drawRect(x + width - scrollbarWidth, y + height + 1, x + width - 1, y + height + 3 + scrollbarHeight, ColorPalette.BRIGHT_BACKGROUND_COLOR.brighter().brighter());
 			}
 		}
+		prevMouseY = mouseY;
 	}
 
 	@Override
@@ -106,7 +113,17 @@ public class ComboBoxComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void update() { }
+	public void update() {
+		if (scrollbarDrag) {
+			if (!(prevMouseY > scrollbarY + height && prevMouseY < scrollbarY + height + scrollbarHeight)) {
+				if (scrollbarY + height < prevMouseY) {
+					onScroll(0, -1);
+				} else {
+					onScroll(0, 1);
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
@@ -119,8 +136,12 @@ public class ComboBoxComponent extends AbstractComponent {
 				if (itemChangedCallback != null) {
 					itemChangedCallback.accept(getSelectedItem());
 				}
+				expanded = false;
+			} else if (x > getX() + width - scrollbarWidth && x < getX() + width && y > getY() + height && y < getY() + (height * (maxItems + 1))) {
+				scrollbarDrag = true;
+			} else {
+				expanded = false;
 			}
-			expanded = false;
 			return true;
 		}
 		if (prevValue && !expanded) {
@@ -130,7 +151,9 @@ public class ComboBoxComponent extends AbstractComponent {
 	}
 
 	@Override
-	public void mouseReleased(double x, double y, int mouseButton) { }
+	public void mouseReleased(double x, double y, int mouseButton) {
+		scrollbarDrag = false;
+	}
 
 	@Override
 	public void charTyped(char typedChar) { }
