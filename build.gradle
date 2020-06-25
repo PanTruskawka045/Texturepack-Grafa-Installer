@@ -11,7 +11,7 @@ apply plugin: "io.freefair.lombok"
 apply plugin: 'java'
 
 group 'me.deftware'
-version '1.9.2.2'
+version '1.9.2.3'
 
 def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toBoolean() : false
 

@@ -17,7 +17,7 @@ import java.util.jar.Manifest;
  */
 public class Main {
 
-	public @Getter static String version = "1.9.2.2";
+	public @Getter static String version = "1.9.2.3";
 	public @Getter static Window window;
 
 	public static void main(String[] args) {
