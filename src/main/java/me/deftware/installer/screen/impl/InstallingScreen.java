@@ -4,6 +4,8 @@ import me.deftware.aristois.installer.jsonbuilder.AbstractJsonBuilder;
 import me.deftware.aristois.installer.modloader.impl.ForgeInstaller;
 import me.deftware.aristois.installer.utils.VersionData;
 import me.deftware.installer.Main;
+import me.deftware.installer.MinecraftLauncher;
+import me.deftware.installer.OSUtils;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextComponent;
@@ -18,8 +20,9 @@ public class InstallingScreen extends AbstractScreen {
 	private VersionData version;
 	private String path, launcher;
 	private TextComponent textComponent, subText;
-	private ButtonComponent button;
+	private ButtonComponent button, launchButton;
 	private int count = 0;
+	private boolean stopped = false;
 
 	public InstallingScreen(VersionData version, String path, String launcher) {
 		this.version = version;
@@ -29,17 +32,35 @@ public class InstallingScreen extends AbstractScreen {
 
 	@Override
 	public void init() {
+		if (OSUtils.isWindows() && launcher.toLowerCase().contains("vanilla")) {
+			if (MinecraftLauncher.isRunning()) {
+				stopped = true;
+				MinecraftLauncher.stop();
+			}
+		}
+
 		componentList.clear();
 		textComponent = new TextComponent(0, 0, "Product Sans", 40, "Greatness is coming!");
 		textComponent.centerHorizontally().centerVertically(-20);
 		subText = new TextComponent(0, textComponent.getY() + textComponent.getHeight() + 10, "Product Sans", 30, "Aristois is being installed...");
 		subText.centerHorizontally();
+
 		button = new ButtonComponent(0, Main.getWindow().windowHeight - 110, 220, 50, "Install another version", mouseButton -> {
 			Main.getWindow().transitionForward(new WelcomeScreen());
 		});
 		button.setAlpha(1);
 		button.setVisible(false);
-		addComponent(textComponent, subText, button.centerHorizontally());
+
+		launchButton = new ButtonComponent(0, Main.getWindow().windowHeight - 110 - button.getHeight() - 15, 180, 50, "Launch Minecraft", mouseButton -> {
+			if (OSUtils.isWindows()) {
+				MinecraftLauncher.start();
+				System.exit(0);
+			}
+		});
+		launchButton.setAlpha(1);
+		launchButton.setVisible(false);
+
+		addComponent(textComponent, subText, button.centerHorizontally(), launchButton.centerHorizontally());
 
 		new Thread(() -> {
 			Thread.currentThread().setName("Installer thread");
@@ -76,6 +97,14 @@ public class InstallingScreen extends AbstractScreen {
 			textComponent.fadeIn(aplha -> {
 				button.setVisible(true);
 				button.fadeIn(alpha -> {});
+				if (OSUtils.isWindows() && stopped) {
+					MinecraftLauncher.start();
+				} else if (OSUtils.isWindows() && launcher.toLowerCase().contains("vanilla")) {
+					if (!MinecraftLauncher.isRunning()) {
+						launchButton.setVisible(true);
+						launchButton.fadeIn(alpha -> {});
+					}
+				}
 			});
 			subText.fadeIn(null);
 		}

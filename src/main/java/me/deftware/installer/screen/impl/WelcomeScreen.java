@@ -2,6 +2,8 @@ package me.deftware.installer.screen.impl;
 
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.Main;
+import me.deftware.installer.MinecraftLauncher;
+import me.deftware.installer.OSUtils;
 import me.deftware.installer.engine.Window;
 import me.deftware.installer.screen.AbstractComponent;
 import me.deftware.installer.screen.AbstractScreen;
