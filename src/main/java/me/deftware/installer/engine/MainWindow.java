@@ -188,7 +188,7 @@ public class MainWindow implements Runnable {
 		}
 
 		GLFW.glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
-			if (currentScreen != null && action == GLFW.GLFW_RELEASE && shouldRun) {
+			if (currentScreen != null && action != GLFW.GLFW_RELEASE && shouldRun) {
 				currentScreen.keyPressed(key, mods);
 			}
 		});

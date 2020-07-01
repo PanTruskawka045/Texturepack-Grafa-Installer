@@ -30,6 +30,7 @@ public class DemoScreen extends AbstractScreen {
 		textComponent.setClickCallback(mouseButton -> {
 			System.out.println("Label clicked with mouse button " + mouseButton);
 		});
+		textComponent.setTooltip("Multiline/nTooltip/nTest");
 
 		/*
 			TextBox
@@ -91,7 +92,7 @@ public class DemoScreen extends AbstractScreen {
 		ButtonComponent themeButton = new ButtonComponent(0, Main.getWindow().windowHeight - 100, 100, 50, "Theme", mouseClicked -> {
 			if (ThemeEngine.getTheme() == DefaultThemes.PURPLE) {
 				// The theme can be changed like this, all components will automatically update
-				// You can also create a new theme by extending a class with ITheme
+				// You can also create a new theme by implementing a class with ITheme
 				ThemeEngine.setTheme(DefaultThemes.WHITE);
 			} else {
 				ThemeEngine.setTheme(DefaultThemes.PURPLE);

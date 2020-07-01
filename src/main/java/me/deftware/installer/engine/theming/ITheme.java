@@ -3,7 +3,7 @@ package me.deftware.installer.engine.theming;
 import java.awt.*;
 
 /**
- * The main theme interface, to create a new theme extend a class by this interface
+ * The main theme interface, to create a new theme implement a class by this interface
  *
  * @author Deftware
  */
@@ -15,9 +15,9 @@ public interface ITheme {
 	Color getBackgroundColor();
 
 	/**
-	 * A brighter version of the background color, used for highlighting components and the like
+	 * A brighter version of the background color ideally, used for highlighting components and the like
 	 */
-	Color getBrightBackgroundColor();
+	Color getForegroundColor();
 
 	/**
 	 * The color of the scroller in the scrollbar
@@ -38,6 +38,11 @@ public interface ITheme {
 	 * The color of text components
 	 */
 	Color getTextColor();
+
+	/**
+	 * The highlighted color of text in a textbox
+	 */
+	Color getTextHighlightColor();
 
 	/**
 	 * If text should have shadow by default

@@ -90,8 +90,8 @@ public class TextComponent extends AbstractComponent<TextComponent> {
 				font.drawString((int) x, (int) y, line,  color);
 			} else {
 				font.drawString((int) (x + ((getWidth() / 2) - (font.getStringWidth(line) / 2))), (int) y, line, color);
-				y += font.getStringHeight(line);
 			}
+			y += font.getStringHeight(line);
 		}
 	}
 
@@ -101,7 +101,7 @@ public class TextComponent extends AbstractComponent<TextComponent> {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > this.getX() && x < this.getX() + getWidth() && y > this.getY() && y < this.getY() + getHeight() && clickCallback != null) {
+		if (x > this.getX() && x < this.getX() + getWidth() && y > this.getY() && y < this.getY() + getHeight() && clickCallback != null && mouseButton == 0) {
 			clickCallback.accept(mouseButton);
 			return true;
 		}

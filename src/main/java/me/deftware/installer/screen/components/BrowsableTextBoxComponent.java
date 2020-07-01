@@ -18,13 +18,13 @@ public class BrowsableTextBoxComponent extends TextBoxComponent {
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		super.render(x, y, mouseX, mouseY);
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getBrightBackgroundColor());
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getForegroundColor());
 		font.drawString((int) (x + width - height + 9), (int) (y), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha),"...");
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > getX() + width - height && x < getX() + width && y > getY() && y < getY() + height) {
+		if (x > getX() + width - height && x < getX() + width && y > getY() && y < getY() + height && mouseButton == 0) {
 			String folder = TinyFileDialogs.tinyfd_selectFolderDialog("Select path", "");
 			if (folder != null && !folder.isEmpty()) {
 				text = folder;

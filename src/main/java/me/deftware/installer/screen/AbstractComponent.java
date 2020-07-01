@@ -12,6 +12,7 @@ public abstract class AbstractComponent<T> {
 
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
+	protected @Getter @Setter String tooltip = "";
 
 	/**
 	 * 0 = Not enabled
@@ -60,6 +61,8 @@ public abstract class AbstractComponent<T> {
 	public abstract void keyPressed(int keycode, int mods);
 
 	public abstract void onScroll(double xPos, double yPos);
+
+	public void deFocus() {}
 
 	public AbstractComponent<T> centerHorizontally(float offset) {
 		x = ((AbstractScreen.getWindowWidth() / 2) - (getWidth() / 2)) + offset;

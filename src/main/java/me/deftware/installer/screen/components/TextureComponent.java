@@ -62,7 +62,7 @@ public class TextureComponent extends AbstractComponent<TextureComponent> {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > this.getX() && x < this.getX() + texture.getWidth() && y > this.getY() && y < this.getY() + texture.getHeight() && clickCallback != null) {
+		if (x > this.getX() && x < this.getX() + texture.getWidth() && y > this.getY() && y < this.getY() + texture.getHeight() && clickCallback != null && mouseButton == 0) {
 			clickCallback.accept(mouseButton);
 			return true;
 		}

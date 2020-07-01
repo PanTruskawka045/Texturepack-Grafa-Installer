@@ -21,7 +21,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 	private @Getter String text;
 	private final Consumer<Integer> onClick;
 	private @Setter boolean visible = true;
-	private Color currentColor = ThemeEngine.getTheme().getBrightBackgroundColor();
+	private Color currentColor = ThemeEngine.getTheme().getForegroundColor();
 	private boolean mouseOver = false;
 	private float ratio = 0.5f;
 
@@ -42,7 +42,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 			RenderSystem.drawCircle(x, y + 25, 25, bgColor);
 			RenderSystem.drawCircle(x + width, y + 25, 25, bgColor);
 			font.drawString((int) (x + ((width / 2) - (font.getWidth()/ 2))), (int) (y + ((height / 2) - (font.getHeight() / 2))), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text);
-			mouseOver = mouseX > getX() && mouseX < getX() + width && mouseY > getY() && mouseY < getY() + height;
+			mouseOver = mouseX > getX() - 25 && mouseX < getX() + width + 25 && mouseY > getY() && mouseY < getY() + height;
 		}
 	}
 
@@ -58,12 +58,12 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 				ratio += 0.02f;
 			}
 		}
-		currentColor = ThemeEngine.blend(ratio, ThemeEngine.getTheme().getBackgroundColor().brighter().brighter(), ThemeEngine.getTheme().getBrightBackgroundColor());
+		currentColor = ThemeEngine.blend(ratio, ThemeEngine.getTheme().getBackgroundColor().brighter().brighter(), ThemeEngine.getTheme().getForegroundColor());
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > getX() && x < getX() + width && y > getY() && y < getY() + height && visible) {
+		if (x > getX() - 25 && x < getX() + width + 25 && y > getY() && y < getY() + height && visible && mouseButton == 0) {
 			onClick.accept(mouseButton);
 			return true;
 		}

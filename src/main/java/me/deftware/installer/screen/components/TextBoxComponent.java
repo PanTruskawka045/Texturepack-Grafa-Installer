@@ -28,6 +28,7 @@ public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 	private @Getter @Setter String shadowText = "";
 	private @Getter @Setter boolean readOnly = false;
 	private @Setter Consumer<String> textChanged;
+	private boolean highlighted = false;
 
 	public TextBoxComponent(float x, float y, float width, int fontSize, String text) {
 		super(x, y);
@@ -45,7 +46,7 @@ public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getBackgroundColor());
 		String drawString = text;
 		if (font.getWidth() < maxTextLength) {
-			font.drawString((int) x + 6 + (text.isEmpty() && focused ? 8 : 0), (int) y + 3, text.isEmpty() ? Color.lightGray : ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text.isEmpty() ? shadowText : text);
+			font.drawString((int) x + 6 + (text.isEmpty() && focused ? shadowText.isEmpty() ? 8 : 4 : 0), (int) y + 3, text.isEmpty() ? Color.lightGray : ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text.isEmpty() ? shadowText : text);
 		} else {
 			int numChars = 0;
 			for (int i = drawString.length(); i > -1; i--) {
@@ -57,14 +58,22 @@ public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 			drawString = drawString.substring(0, numChars) + "...";
 			font.drawString((int) x + 6, (int) y + 3, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), drawString);
 		}
+		if (!text.isEmpty() && highlighted) {
+			RenderSystem.drawRect(x + 1, y + 1, x + font.getStringWidth(text) + 12, y + height - 1, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextHighlightColor(), 100));
+		}
 		if (cursorTick && focused) {
-			RenderSystem.drawRect(x + font.getWidth() + 6, y + 3, x + font.getWidth() + 3 + 6, y + height - 3, Color.LIGHT_GRAY);
+			RenderSystem.drawRect(x + font.getStringWidth(text) + 6, y + 3, x + font.getStringWidth(text) + 3 + 6, y + height - 3, Color.LIGHT_GRAY);
 		}
 	}
 
+	@Override
+	public void deFocus() {
+		focused = false;
+	}
+
 	public void setText(String text) {
-		this.text = text;
 		font.setText(text);
+		this.text = text;
 		if (textChanged != null) {
 			textChanged.accept(text);
 		}
@@ -82,6 +91,12 @@ public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 	public boolean mouseClicked(double x, double y, int mouseButton) {
 		boolean prevState = focused;
 		focused = x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight() && !readOnly;
+		if (focused && mouseButton == 2) {
+			text += GLFW.glfwGetClipboardString(Main.getWindow().windowHandle);
+		} else {
+			focused = focused && mouseButton == 0;
+			highlighted = false;
+		}
 		if (!prevState && focused) {
 			lastMs = System.currentTimeMillis();
 			cursorTick = true;
@@ -107,8 +122,16 @@ public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 				text = text.substring(0, text.length() - 1);
 			} else if (keycode == GLFW.GLFW_KEY_V && mods == GLFW.GLFW_MOD_CONTROL) {
 				text += GLFW.glfwGetClipboardString(Main.getWindow().windowHandle);
-			} else if (keycode == GLFW.GLFW_KEY_C && mods == GLFW.GLFW_MOD_CONTROL) {
+			} else if ((keycode == GLFW.GLFW_KEY_C || keycode == GLFW.GLFW_KEY_X) && mods == GLFW.GLFW_MOD_CONTROL && highlighted) {
 				GLFW.glfwSetClipboardString(Main.getWindow().windowHandle, text);
+				highlighted = false;
+				if (keycode == GLFW.GLFW_KEY_X) {
+					setText("");
+				}
+			} else if (keycode == GLFW.GLFW_KEY_A && mods == GLFW.GLFW_MOD_CONTROL) {
+				highlighted = true;
+			} else if (keycode == GLFW.GLFW_KEY_ESCAPE) {
+				highlighted = false;
 			}
 			setText(text);
 		}

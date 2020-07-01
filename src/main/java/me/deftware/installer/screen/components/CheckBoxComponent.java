@@ -6,8 +6,6 @@ import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
-import me.deftware.installer.resources.font.BitmapFont;
-import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractComponent;
 
 import java.awt.*;
@@ -43,7 +41,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		font.drawString((int) (x + height + 10), (int) y + 2, ThemeEngine.getTheme().getTextColor(), text);
-		RenderSystem.drawRect(x, y, x + height, y + height, ThemeEngine.getTheme().getBrightBackgroundColor());
+		RenderSystem.drawRect(x, y, x + height, y + height, ThemeEngine.getTheme().getForegroundColor());
 		try {
 			if (checked) {
 				RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
@@ -57,7 +55,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
-		if (x > getX() && x < getX() + width + height + 5 && y > getY() && y < getY() + height) {
+		if (x > getX() && x < getX() + width + height + 5 && y > getY() && y < getY() + height && mouseButton == 0) {
 			checked = !checked;
 			if (onCheckCallback != null) {
 				onCheckCallback.accept(checked);

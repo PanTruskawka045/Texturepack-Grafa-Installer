@@ -62,7 +62,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 		RenderSystem.drawRect(x, y, x + width, y + (height * (expanded ? maxItems + 1 : 1)), ThemeEngine.getTheme().getOutlineColor());
 		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + (height * (expanded ? maxItems + 1 : 1)) - 1, ThemeEngine.getTheme().getBackgroundColor());
 		font.drawString((int) x + 6, (int) y + 3, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), getSelectedItem());
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getBrightBackgroundColor());
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getForegroundColor());
 		try {
 			RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
 			arrow.draw(x + width - height + ((height / 2) - (arrow.getWidth() / 2)), y + ((height / 2) - (arrow.getHeight() / 2)));
@@ -78,7 +78,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 			for (String item : items) {
 				if (loopIndex >= indexOffset && loopIndex - indexOffset < maxItems) {
 					if (mouseY > y - 1 && mouseY < y + 6 + font.getHeight() && mouseX > x && mouseX < x + width - scrollbarWidth) {
-						RenderSystem.drawRect(x + 1, y - 1, x + width - 1, y + 5 + font.getHeight(), ThemeEngine.getTheme().getBrightBackgroundColor());
+						RenderSystem.drawRect(x + 1, y - 1, x + width - 1, y + 5 + font.getHeight(), ThemeEngine.getTheme().getForegroundColor());
 						hoverIndex = loopIndex;
 					}
 					font.drawString((int) x + 6, (int) y, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), item);
@@ -126,7 +126,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
 		boolean prevValue = expanded;
-		if (x > getX() && x < getX() + width && y > getY() && y < getY() + height) {
+		if (x > getX() && x < getX() + width && y > getY() && y < getY() + height && mouseButton == 0) {
 			expanded = !expanded;
 		} else if (expanded) {
 			if (hoverIndex != -1) {
