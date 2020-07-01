@@ -1,4 +1,4 @@
-package me.deftware.installer.screen.impl.configure;
+package me.deftware.installer.screen.impl.simple.configure;
 
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.aristois.installer.utils.VersionData;
@@ -6,9 +6,9 @@ import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.*;
-import me.deftware.installer.screen.impl.InstallingScreen;
-import me.deftware.installer.screen.impl.TransitionScreen;
-import me.deftware.installer.screen.impl.YesNoScreen;
+import me.deftware.installer.screen.impl.simple.InstallingScreen;
+import me.deftware.installer.screen.impl.simple.TransitionScreen;
+import me.deftware.installer.screen.impl.simple.YesNoScreen;
 
 import java.io.File;
 
@@ -36,15 +36,15 @@ public class LauncherScreen extends AbstractScreen {
 			launchers[i] = data.getModLoaders().get(i - data.getLaunchers().size()) + " mod loader";
 		}
 
-		ComboBoxComponent launcherBox = new ComboBoxComponent(0, 240, 600, 30, "Product Sans", launchers);
+		ComboBoxComponent launcherBox = new ComboBoxComponent(0, 240, 600, 30,  launchers);
 		launcherBox.centerHorizontally();
 
 		TextBoxComponent minecraftPath = new BrowsableTextBoxComponent(0, 300, 600, 30, OSUtils.getMCDir());
 		minecraftPath.setShadowText("Minecraft path...");
 		minecraftPath.centerHorizontally();
 
-		addComponent(new TextComponent(0, 65, "Product Sans", 40, "Launcher & Directory").centerHorizontally(),
-				new TextComponent(0, 130, "Product Sans", 25, "Select your launcher and Minecraft directory.", "Press \"Continue\" for a default installation:").centerHorizontally(),
+		addComponent(new TextComponent(0, 65,  40, "Launcher & Directory").centerHorizontally(),
+				new TextComponent(0, 130,  25, "Select your launcher and Minecraft directory.", "Press \"Continue\" for a default installation:").centerHorizontally(),
 				launcherBox, new ButtonComponent(50, 400, 100, 50, "Continue", mouseButton -> {
 					String launcher = launcherBox.getSelectedItem();
 					if (launcher.toLowerCase().contains("mod loader")) {

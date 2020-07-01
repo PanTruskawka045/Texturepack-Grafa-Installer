@@ -1,6 +1,5 @@
-package me.deftware.installer.screen.impl;
+package me.deftware.installer.screen.impl.simple;
 
-import lombok.Setter;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextComponent;
@@ -36,9 +35,10 @@ public class YesNoScreen extends AbstractScreen {
 
 	@Override
 	public void init() {
-		TextComponent titleComponent = new TextComponent(0, 0, "Product Sans", 35, title);
+		componentList.clear();
+		TextComponent titleComponent = new TextComponent(0, 0,  35, title);
 		titleComponent.centerHorizontally().centerVertically(-130);
-		TextComponent subText = new TextComponent(0, 0, "Product Sans", 25, text);
+		TextComponent subText = new TextComponent(0, 0,  25, text);
 		subText.centerHorizontally();
 		subText.setY(titleComponent.getY() + titleComponent.getHeight() + 10);
 		addComponent(titleComponent, subText);

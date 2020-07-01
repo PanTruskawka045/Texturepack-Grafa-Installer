@@ -1,6 +1,6 @@
 package me.deftware.installer.screen.components;
 
-import me.deftware.installer.engine.ColorPalette;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
@@ -11,14 +11,15 @@ public class BrowsableTextBoxComponent extends TextBoxComponent {
 
 	public BrowsableTextBoxComponent(float x, float y, float width, int fontSize, String text) {
 		super(x, y, width, fontSize, text);
+		setReadOnly(true);
 		maxTextLength -= height;
 	}
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		super.render(x, y, mouseX, mouseY);
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ColorPalette.BRIGHT_BACKGROUND_COLOR);
-		font.drawString((int) (x + width - height + 9), (int) (y), "...");
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getBrightBackgroundColor());
+		font.drawString((int) (x + width - height + 9), (int) (y), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha),"...");
 	}
 
 	@Override

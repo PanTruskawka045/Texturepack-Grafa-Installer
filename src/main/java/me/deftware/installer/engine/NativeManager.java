@@ -14,6 +14,8 @@ import java.util.jar.JarFile;
 
 /**
  * Manages LWJGL natives
+ *
+ * @author Deftware
  */
 public class NativeManager {
 

@@ -3,7 +3,7 @@ package me.deftware.installer.screen.components;
 import lombok.Getter;
 import lombok.Setter;
 import me.deftware.installer.Main;
-import me.deftware.installer.engine.ColorPalette;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
@@ -11,40 +11,41 @@ import me.deftware.installer.screen.AbstractComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
+ * A textbox
+ *
  * @author Deftware
  */
-public class TextBoxComponent extends AbstractComponent {
+public class TextBoxComponent extends AbstractComponent<TextBoxComponent> {
 
-	protected BitmapFont font;
+	protected @Getter TextComponent font;
 	private long lastMs = System.currentTimeMillis();
 	protected @Getter float width, height, maxTextLength;
 	private @Getter boolean focused = false, cursorTick = true;
-	protected @Getter @Setter String text, shadowText = "";
+	protected @Getter String text;
+	private @Getter @Setter String shadowText = "";
+	private @Getter @Setter boolean readOnly = false;
+	private @Setter Consumer<String> textChanged;
 
 	public TextBoxComponent(float x, float y, float width, int fontSize, String text) {
-		this(x, y, width, fontSize, "Product Sans", text);
-	}
-
-	public TextBoxComponent(float x, float y, float width, int fontSize, String font, String text) {
 		super(x, y);
-		this.font = FontManager.getFont(font, fontSize, FontManager.Modifiers.ANTIALIASED);
-		this.font.setShadowSize(1);
-		this.font.initialize(Color.white, "");
+		this.font = new TextComponent(x, y, fontSize, text);
+		this.font.setCenteredText(false);
 		this.width = width;
 		this.maxTextLength = width;
 		this.text = text;
-		height = this.font.getStringHeight("ABC") + 6;
+		height = this.font.getHeight() + 6;
 	}
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
-		RenderSystem.drawRect(x, y, x + width, y + height, Color.LIGHT_GRAY);
-		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + height - 1, ColorPalette.BACKGROUND_COLOR);
+		RenderSystem.drawRect(x, y, x + width, y + height, ThemeEngine.getTheme().getOutlineColor());
+		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getBackgroundColor());
 		String drawString = text;
-		if (font.getStringWidth(text) < maxTextLength) {
-			font.drawString((int) x + 6 + (text.isEmpty() && focused ? 8 : 0), (int) y + 3, text.isEmpty() ? shadowText : text, text.isEmpty() ? Color.lightGray : Color.white);
+		if (font.getWidth() < maxTextLength) {
+			font.drawString((int) x + 6 + (text.isEmpty() && focused ? 8 : 0), (int) y + 3, text.isEmpty() ? Color.lightGray : ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text.isEmpty() ? shadowText : text);
 		} else {
 			int numChars = 0;
 			for (int i = drawString.length(); i > -1; i--) {
@@ -54,10 +55,18 @@ public class TextBoxComponent extends AbstractComponent {
 				}
 			}
 			drawString = drawString.substring(0, numChars) + "...";
-			font.drawString((int) x + 6, (int) y + 3, drawString, Color.white);
+			font.drawString((int) x + 6, (int) y + 3, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), drawString);
 		}
 		if (cursorTick && focused) {
-			RenderSystem.drawRect(x + font.getStringWidth(drawString) + 6, y + 3, x + font.getStringWidth(drawString) + 3 + 6, y + height - 3, Color.LIGHT_GRAY);
+			RenderSystem.drawRect(x + font.getWidth() + 6, y + 3, x + font.getWidth() + 3 + 6, y + height - 3, Color.LIGHT_GRAY);
+		}
+	}
+
+	public void setText(String text) {
+		this.text = text;
+		font.setText(text);
+		if (textChanged != null) {
+			textChanged.accept(text);
 		}
 	}
 
@@ -72,7 +81,7 @@ public class TextBoxComponent extends AbstractComponent {
 	@Override
 	public boolean mouseClicked(double x, double y, int mouseButton) {
 		boolean prevState = focused;
-		focused = x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight();
+		focused = x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight() && !readOnly;
 		if (!prevState && focused) {
 			lastMs = System.currentTimeMillis();
 			cursorTick = true;
@@ -101,6 +110,7 @@ public class TextBoxComponent extends AbstractComponent {
 			} else if (keycode == GLFW.GLFW_KEY_C && mods == GLFW.GLFW_MOD_CONTROL) {
 				GLFW.glfwSetClipboardString(Main.getWindow().windowHandle, text);
 			}
+			setText(text);
 		}
 	}
 

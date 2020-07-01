@@ -2,26 +2,26 @@ package me.deftware.installer.screen.components;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.deftware.installer.engine.ColorPalette;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
-import me.deftware.installer.resources.font.BitmapFont;
-import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractComponent;
 
 import java.awt.*;
 import java.util.function.Consumer;
 
 /**
+ * A clickable button
+ *
  * @author Deftware
  */
 public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 
-	private @Getter float width, height;
-	private BitmapFont font;
-	private @Getter @Setter String text;
-	private Consumer<Integer> onClick;
+	private @Getter final TextComponent font;
+	private @Getter final float width, height;
+	private @Getter String text;
+	private final Consumer<Integer> onClick;
 	private @Setter boolean visible = true;
-	private Color currentColor = ColorPalette.BRIGHT_BACKGROUND_COLOR;
+	private Color currentColor = ThemeEngine.getTheme().getBrightBackgroundColor();
 	private boolean mouseOver = false;
 	private float ratio = 0.5f;
 
@@ -31,8 +31,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 		this.height = height;
 		this.onClick = onClick;
 		this.text = text;
-		font = FontManager.getFont("Product Sans", 23, FontManager.Modifiers.ANTIALIASED);
-		font.initialize(Color.white, "");
+		font = new TextComponent(x, y, 23, text);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 			RenderSystem.drawRect(x, y, x + width, y + height, bgColor);
 			RenderSystem.drawCircle(x, y + 25, 25, bgColor);
 			RenderSystem.drawCircle(x + width, y + 25, 25, bgColor);
-			font.drawString((int) (x + ((width / 2) - (font.getStringWidth(text) / 2))), (int) (y + ((height / 2) - (font.getStringHeight(text) / 2))), text, new Color(255, 255, 255, alpha));
+			font.drawString((int) (x + ((width / 2) - (font.getWidth()/ 2))), (int) (y + ((height / 2) - (font.getHeight() / 2))), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text);
 			mouseOver = mouseX > getX() && mouseX < getX() + width && mouseY > getY() && mouseY < getY() + height;
 		}
 	}
@@ -59,7 +58,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 				ratio += 0.02f;
 			}
 		}
-		currentColor = ColorPalette.blend(ratio, ColorPalette.BACKGROUND_COLOR.brighter().brighter(), ColorPalette.BRIGHT_BACKGROUND_COLOR);
+		currentColor = ThemeEngine.blend(ratio, ThemeEngine.getTheme().getBackgroundColor().brighter().brighter(), ThemeEngine.getTheme().getBrightBackgroundColor());
 	}
 
 	@Override
@@ -69,6 +68,11 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 			return true;
 		}
 		return false;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+		font.setText(text);
 	}
 
 	@Override

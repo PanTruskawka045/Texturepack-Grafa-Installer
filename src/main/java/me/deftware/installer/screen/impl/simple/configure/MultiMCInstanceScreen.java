@@ -1,4 +1,4 @@
-package me.deftware.installer.screen.impl.configure;
+package me.deftware.installer.screen.impl.simple.configure;
 
 import me.deftware.aristois.installer.utils.VersionData;
 import me.deftware.installer.Main;
@@ -6,7 +6,7 @@ import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.ComboBoxComponent;
 import me.deftware.installer.screen.components.TextComponent;
-import me.deftware.installer.screen.impl.InstallingScreen;
+import me.deftware.installer.screen.impl.simple.InstallingScreen;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,12 +40,12 @@ public class MultiMCInstanceScreen extends AbstractScreen {
 			instanceList.add(instance);
 		}
 
-		ComboBoxComponent instancesBox = new ComboBoxComponent(0, 200, 600, 30, "Product Sans", instanceList.toArray(new String[instanceList.size()]));
+		ComboBoxComponent instancesBox = new ComboBoxComponent(0, 200, 600, 30,  instanceList.toArray(new String[instanceList.size()]));
 		instancesBox.centerHorizontally();
 
-		addComponent(instancesBox, new TextComponent(0, 65, "Product Sans", 40, "MultiMC instance").centerHorizontally(),
-				new TextComponent(0, 130, "Product Sans", 25, "Select which MultiMC instance you would like to use Aristois with:").centerHorizontally(),
-				new TextComponent(0, 300, "Product Sans", 25, "The instance must be Minecraft version " + version.getVersion()).centerHorizontally(),
+		addComponent(instancesBox, new TextComponent(0, 65,  40, "MultiMC instance").centerHorizontally(),
+				new TextComponent(0, 130,  25, "Select which MultiMC instance you would like to use Aristois with:").centerHorizontally(),
+				new TextComponent(0, 300,  25, "The instance must be Minecraft version " + version.getVersion()).centerHorizontally(),
 				new ButtonComponent(50, 400, 100, 50, "Continue", mouseButton -> {
 					Main.getWindow().transitionForward(new InstallingScreen(version, path + File.separator + "instances" + File.separator + instancesBox.getSelectedItem() + File.separator, launcher));
 				}).centerHorizontally());

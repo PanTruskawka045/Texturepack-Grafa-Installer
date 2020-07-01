@@ -13,7 +13,6 @@ public abstract class AbstractComponent<T> {
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
 
-
 	/**
 	 * 0 = Not enabled
 	 * 1 = Fade in

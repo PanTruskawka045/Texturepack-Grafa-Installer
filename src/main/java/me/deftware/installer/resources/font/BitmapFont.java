@@ -1,5 +1,6 @@
 package me.deftware.installer.resources.font;
 
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
@@ -93,15 +94,11 @@ public class BitmapFont {
 	}
 
 	public int drawString(int x, int y, String text) {
-		return drawString(x, y, text, Color.white, true);
+		return drawString(x, y, text, ThemeEngine.getTheme().getTextColor(), ThemeEngine.getTheme().isTextShadow());
 	}
 
 	public int drawStringWithShadow(int x, int y, String text) {
-		return drawString(x, y, text, Color.white, true);
-	}
-
-	public int drawString(int x, int y, String text, boolean shadow) {
-		return drawString(x, y, text, Color.white, shadow);
+		return drawString(x, y, text, ThemeEngine.getTheme().getTextColor(), true);
 	}
 
 	public int drawString(int x, int y, String text, Color color, boolean shadow) {

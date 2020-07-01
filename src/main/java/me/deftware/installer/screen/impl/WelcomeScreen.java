@@ -2,15 +2,14 @@ package me.deftware.installer.screen.impl;
 
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.Main;
-import me.deftware.installer.MinecraftLauncher;
-import me.deftware.installer.OSUtils;
-import me.deftware.installer.engine.Window;
+import me.deftware.installer.engine.MainWindow;
 import me.deftware.installer.screen.AbstractComponent;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextComponent;
 import me.deftware.installer.screen.components.TextureComponent;
-import me.deftware.installer.screen.impl.configure.VersionScreen;
+import me.deftware.installer.screen.impl.simple.UpdateScreen;
+import me.deftware.installer.screen.impl.simple.configure.VersionScreen;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -39,8 +38,8 @@ public class WelcomeScreen extends AbstractScreen {
 		gitIcon.setX(Main.getWindow().windowWidth - gitIcon.getWidth() - 10);
 		gitIcon.setY(Main.getWindow().windowHeight - gitIcon.getHeight() - 10);
 
-		addComponent(button, gitIcon, new TextComponent(0, gitIcon.getY() + 20, "Product Sans", 18, mouseButton -> {
-			Window.openLegacy();
+		addComponent(button, gitIcon, new TextComponent(0, gitIcon.getY() + 20,  18, mouseButton -> {
+			MainWindow.openLegacy();
 			GLFW.glfwSetWindowShouldClose(Main.getWindow().getWindowHandle(), true);
 		}, "Legacy installer").centerHorizontally());
 

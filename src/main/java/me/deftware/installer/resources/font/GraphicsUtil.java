@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 /**
+ * Texture loading management
+ *
  * @author Deftware
  */
 public class GraphicsUtil {

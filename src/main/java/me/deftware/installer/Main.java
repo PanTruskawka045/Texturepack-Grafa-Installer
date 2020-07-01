@@ -3,7 +3,7 @@ package me.deftware.installer;
 import lombok.Getter;
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.installer.engine.NativeManager;
-import me.deftware.installer.engine.Window;
+import me.deftware.installer.engine.MainWindow;
 import me.deftware.installer.resources.font.FontManager;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ public class Main {
 
 	public static String donorString = "@DONOR@";
 	public @Getter static String version = "1.9.2.3";
-	public @Getter static Window window;
+	public @Getter static MainWindow window;
 
 	public static void main(String[] args) {
 		if (args.length != 0 && !OSUtils.isMac()) {
@@ -34,17 +34,16 @@ public class Main {
 		InstallerAPI.setDonorBuild(Boolean.parseBoolean(donorString));
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			Font customFont = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("/assets/sans.ttf"));
-			FontManager.registerCustomFont(customFont);
+			FontManager.loadFontFromAssets("/assets/sans.ttf");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		// macOS just shouldn't run opengl, lwjgl can only run on 64 bit
+		// opengl is deprecated in macOS
 		if (OSUtils.isMac()) {
-			Window.openLegacy();
+			MainWindow.openLegacy();
 		} else {
 			try {
-				window = new Window();
+				window = new MainWindow();
 				window.run();
 			} catch (UnsatisfiedLinkError ex) {
 				System.err.println("Unsatisfied lwjgl link error, trying to fix it...");
@@ -54,11 +53,11 @@ public class Main {
 					restart();
 				} else {
 					System.out.println("Failed to load native libraries, defaulting to legacy mode...");
-					Window.openLegacy();
+					MainWindow.openLegacy();
 				}
 			} catch (Throwable ex) {
 				ex.printStackTrace();
-				Window.openLegacy();
+				MainWindow.openLegacy();
 			}
 		}
 	}
@@ -74,7 +73,7 @@ public class Main {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			Window.openLegacy();
+			MainWindow.openLegacy();
 		}
 	}
 

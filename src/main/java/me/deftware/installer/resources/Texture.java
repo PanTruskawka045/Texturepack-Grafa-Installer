@@ -5,6 +5,8 @@ import lombok.Data;
 import org.lwjgl.opengl.GL11;
 
 /**
+ * Represents a texture and can load/draw it
+ *
  * @author Deftware
  */
 public @Data @AllArgsConstructor class Texture {

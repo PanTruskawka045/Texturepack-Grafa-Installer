@@ -7,12 +7,14 @@ import me.deftware.installer.screen.AbstractComponent;
 import java.util.function.Consumer;
 
 /**
+ * A texture which can be rendered on a screen
+ *
  * @author Deftware
  */
-public class TextureComponent extends AbstractComponent {
+public class TextureComponent extends AbstractComponent<TextureComponent> {
 
 	private Texture texture;
-	private Consumer<Integer> clickCallback;
+	private final Consumer<Integer> clickCallback;
 
 	public TextureComponent(float x, float y, String path) {
 		this(x, y, path, 1, null);

@@ -2,6 +2,7 @@ package me.deftware.installer.screen.components;
 
 import com.google.common.io.ByteStreams;
 import lombok.Getter;
+import lombok.Setter;
 import me.deftware.installer.Main;
 import me.deftware.installer.resources.GifDecoder;
 import me.deftware.installer.resources.ResourceUtils;
@@ -15,16 +16,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A texture component which can be used to render gifs in a screen
+ *
  * @author Deftware
  */
 public class GifTextureComponent extends AbstractComponent<GifTextureComponent> {
 
-	private List<GifSlice> slices = new ArrayList<>();
+	private final List<GifSlice> slices = new ArrayList<>();
 	private int delay = 0, index = 0;
 	private @Getter float width, height;
-	private int scale, speedOverride;
+	private @Getter @Setter int scale, speedOverride;
 	private boolean fillScreen = false;
-	private String asset;
+	private final String asset;
 
 	public GifTextureComponent(float x, float y, String asset, int scale, int speedOverride) {
 		super(x, y);

@@ -1,4 +1,4 @@
-package me.deftware.installer.screen.impl;
+package me.deftware.installer.screen.impl.simple;
 
 import me.deftware.aristois.installer.jsonbuilder.AbstractJsonBuilder;
 import me.deftware.aristois.installer.modloader.impl.ForgeInstaller;
@@ -9,6 +9,7 @@ import me.deftware.installer.OSUtils;
 import me.deftware.installer.screen.AbstractScreen;
 import me.deftware.installer.screen.components.ButtonComponent;
 import me.deftware.installer.screen.components.TextComponent;
+import me.deftware.installer.screen.impl.WelcomeScreen;
 
 import java.io.File;
 
@@ -40,9 +41,9 @@ public class InstallingScreen extends AbstractScreen {
 		}
 
 		componentList.clear();
-		textComponent = new TextComponent(0, 0, "Product Sans", 40, "Greatness is coming!");
+		textComponent = new TextComponent(0, 0,  40, "Greatness is coming!");
 		textComponent.centerHorizontally().centerVertically(-20);
-		subText = new TextComponent(0, textComponent.getY() + textComponent.getHeight() + 10, "Product Sans", 30, "Aristois is being installed...");
+		subText = new TextComponent(0, textComponent.getY() + textComponent.getHeight() + 10,  30, "Aristois is being installed...");
 		subText.centerHorizontally();
 
 		button = new ButtonComponent(0, Main.getWindow().windowHeight - 110, 220, 50, "Install another version", mouseButton -> {

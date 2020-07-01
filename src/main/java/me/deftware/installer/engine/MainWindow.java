@@ -2,10 +2,12 @@ package me.deftware.installer.engine;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
+import lombok.Setter;
 import me.deftware.aristois.installer.InstallerAPI;
 import me.deftware.aristois.installer.ui.InstallerUI;
 import me.deftware.installer.Main;
 import me.deftware.installer.OSUtils;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
@@ -33,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author Deftware
  */
 @SuppressWarnings("FieldMayBeFinal")
-public class Window implements Runnable {
+public class MainWindow implements Runnable {
 
 	public @Getter long windowHandle;
 	public @Getter double mouseX, mouseY;
@@ -45,6 +47,7 @@ public class Window implements Runnable {
 	public AbstractScreen currentScreen, transitionScreen, previousScreen;
 	private @Getter WindowDecorations windowDecorations;
 	private List<Runnable> renderThreadRunner = new ArrayList<>();
+	private @Setter boolean scheduleRefresh = false;
 
 	/**
 	 * Set to false for things like opening dialogs
@@ -250,7 +253,6 @@ public class Window implements Runnable {
 
 	private void loop() {
 		GL.createCapabilities();
-		RenderSystem.glClearColor(ColorPalette.BACKGROUND_COLOR);
 		setupView();
 
 		BitmapFont font = FontManager.getFont("Product Sans", 18, FontManager.Modifiers.ANTIALIASED);
@@ -264,6 +266,7 @@ public class Window implements Runnable {
 		currentScreen = new WelcomeScreen();
 		currentScreen.initSuper();
 		while (!GLFW.glfwWindowShouldClose(windowHandle)) {
+			RenderSystem.glClearColor(ThemeEngine.getTheme().getBackgroundColor());
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			GLFW.glfwGetCursorPos(windowHandle, posX, posY);
 			mouseX = posX.get();
@@ -281,6 +284,11 @@ public class Window implements Runnable {
 			}
 
 			if (currentScreen != null) {
+				if (scheduleRefresh) {
+					scheduleRefresh = false;
+					currentScreen.setInitialized(false);
+					currentScreen.initSuper();
+				}
 				currentScreen.render(mouseX, mouseY);
 			}
 			if (transitionScreen != null) {

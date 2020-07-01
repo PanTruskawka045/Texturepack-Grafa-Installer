@@ -3,6 +3,7 @@ package me.deftware.installer.engine;
 import lombok.Getter;
 import lombok.Setter;
 import me.deftware.installer.Main;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
@@ -15,6 +16,8 @@ import java.nio.IntBuffer;
 /**
  * Custom implementation of the OS default window decorations.
  * Handles dragging the window and closing it.
+ *
+ * Only works on Windows, and Linux distributions without Wayland
  *
  * @author Deftware
  */
@@ -51,7 +54,7 @@ public class WindowDecorations {
 			}
 		});
 
-		font = FontManager.getFont("Product Sans", 20, FontManager.Modifiers.ANTIALIASED);
+		font = FontManager.getFont( "Product Sans", 20, FontManager.Modifiers.ANTIALIASED);
 		font.initialize(Color.white, "");
 	}
 
@@ -72,8 +75,8 @@ public class WindowDecorations {
 		//RenderSystem.drawRect(0, 0, Main.getWindow().windowWidth, titleBarHeight, new Color(19,29,39));
 		font.drawStringWithShadow(centeredTitle ? (Main.getWindow().windowWidth / 2) - (font.getStringWidth(windowTitle) / 2) : (titleBarHeight / 2) - (font.getStringHeight(windowTitle) / 2), (titleBarHeight / 2) - (font.getStringHeight(windowTitle) / 2), windowTitle);
 		// Exit button
-		RenderSystem.drawLine(Main.getWindow().windowWidth - navButtonsSize - offset, offset, Main.getWindow().windowWidth - offset, offset + navButtonsSize);
-		RenderSystem.drawLine(Main.getWindow().windowWidth - navButtonsSize - offset, offset + navButtonsSize, Main.getWindow().windowWidth - offset, offset);
+		RenderSystem.drawLine(Main.getWindow().windowWidth - navButtonsSize - offset, offset, Main.getWindow().windowWidth - offset, offset + navButtonsSize, ThemeEngine.getTheme().getOutlineColor());
+		RenderSystem.drawLine(Main.getWindow().windowWidth - navButtonsSize - offset, offset + navButtonsSize, Main.getWindow().windowWidth - offset, offset, ThemeEngine.getTheme().getOutlineColor());
 	}
 
 }
