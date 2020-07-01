@@ -45,6 +45,11 @@ public interface ITheme {
 	Color getTextHighlightColor();
 
 	/**
+	 * The background of tooltip popups
+	 */
+	Color getTooltipBackground();
+
+	/**
 	 * If text should have shadow by default
 	 */
 	boolean isTextShadow();

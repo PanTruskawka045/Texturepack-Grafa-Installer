@@ -2,6 +2,7 @@ package me.deftware.installer.screen;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -12,6 +13,10 @@ public abstract class AbstractComponent<T> {
 
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
+
+	/**
+	 * Tooltips can be split into multilines using the /n delimiter
+	 */
 	protected @Getter @Setter String tooltip = "";
 
 	/**
@@ -61,6 +66,10 @@ public abstract class AbstractComponent<T> {
 	public abstract void keyPressed(int keycode, int mods);
 
 	public abstract void onScroll(double xPos, double yPos);
+
+	public int cursorTest(double mouseX, double mouseY) {
+		return GLFW.GLFW_ARROW_CURSOR;
+	}
 
 	public void deFocus() {}
 

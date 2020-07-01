@@ -21,9 +21,8 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 	private @Getter String text;
 	private final Consumer<Integer> onClick;
 	private @Setter boolean visible = true;
-	private Color currentColor = ThemeEngine.getTheme().getForegroundColor();
 	private boolean mouseOver = false;
-	private float ratio = 0.5f;
+	private final BlendableRect blendableRect = new BlendableRect();
 
 	public ButtonComponent(float x, float y, float width, float height, String text, Consumer<Integer> onClick) {
 		super(x, y);
@@ -37,7 +36,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		if (visible) {
-			Color bgColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), alpha);
+			Color bgColor = blendableRect.getCurrentColor(alpha);
 			RenderSystem.drawRect(x, y, x + width, y + height, bgColor);
 			RenderSystem.drawCircle(x, y + 25, 25, bgColor);
 			RenderSystem.drawCircle(x + width, y + 25, 25, bgColor);
@@ -49,16 +48,7 @@ public class ButtonComponent extends AbstractComponent<ButtonComponent> {
 	@Override
 	public void update() {
 		super.update();
-		if (mouseOver) {
-			if (ratio > 0.4f) {
-				ratio -= 0.02f;
-			}
-		} else {
-			if (ratio < 0.5f) {
-				ratio += 0.02f;
-			}
-		}
-		currentColor = ThemeEngine.blend(ratio, ThemeEngine.getTheme().getBackgroundColor().brighter().brighter(), ThemeEngine.getTheme().getForegroundColor());
+		blendableRect.update(mouseOver);
 	}
 
 	@Override

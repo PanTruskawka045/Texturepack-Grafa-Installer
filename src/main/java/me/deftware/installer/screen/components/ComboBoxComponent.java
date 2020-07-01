@@ -7,6 +7,7 @@ import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
 import me.deftware.installer.screen.AbstractComponent;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -21,9 +22,11 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 	private @Getter float width, height, scrollbarWidth = 17, scrollbarHeight = 45, scrollbarY = 0;
 	private @Getter @Setter int index = 0, hoverIndex = 0, maxItems = 5, indexOffset = 0;
 	private String[] items;
-	private boolean expanded = false, scrollbarDrag = false, customFont = false;
+	private boolean expanded = false, scrollbarDrag = false;
 	private @Setter Consumer<String> itemChangedCallback;
 	private double prevMouseY = 0;
+	private final BlendableRect blendableRect = new BlendableRect();
+	private boolean mouseOver = false;
 
 	public ComboBoxComponent(float x, float y, float width, int fontSize, String... items) {
 		super(x, y);
@@ -62,7 +65,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 		RenderSystem.drawRect(x, y, x + width, y + (height * (expanded ? maxItems + 1 : 1)), ThemeEngine.getTheme().getOutlineColor());
 		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + (height * (expanded ? maxItems + 1 : 1)) - 1, ThemeEngine.getTheme().getBackgroundColor());
 		font.drawString((int) x + 6, (int) y + 3, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), getSelectedItem());
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, ThemeEngine.getTheme().getForegroundColor());
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, blendableRect.getCurrentColor(alpha));
 		try {
 			RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
 			arrow.draw(x + width - height + ((height / 2) - (arrow.getWidth() / 2)), y + ((height / 2) - (arrow.getHeight() / 2)));
@@ -99,6 +102,15 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 			}
 		}
 		prevMouseY = mouseY;
+		mouseOver = mouseX > x + width - height && mouseX < x+ width && mouseY > y && mouseY < y + height;
+	}
+
+	@Override
+	public int cursorTest(double x, double y) {
+		if (x > getX() + getWidth() - height && x < getX() + getWidth() && y > getY() && y < getY() + getHeight()) {
+			return GLFW.GLFW_HAND_CURSOR;
+		}
+		return GLFW.GLFW_ARROW_CURSOR;
 	}
 
 	@Override
@@ -121,6 +133,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 				}
 			}
 		}
+		blendableRect.update(mouseOver);
 	}
 
 	@Override

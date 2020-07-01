@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -48,6 +49,7 @@ public class MainWindow implements Runnable {
 	private @Getter WindowDecorations windowDecorations;
 	private List<Runnable> renderThreadRunner = new ArrayList<>();
 	private @Setter boolean scheduleRefresh = false;
+	private @Getter static HashMap<Integer, Long> cursorCache = new HashMap<>();
 
 	/**
 	 * Set to false for things like opening dialogs
@@ -242,6 +244,10 @@ public class MainWindow implements Runnable {
 				currentScreen.mouseReleased(mouseX, mouseY, button);
 			}
 		}
+	}
+
+	public void close() {
+		GLFW.glfwSetWindowShouldClose(Main.getWindow().getWindowHandle(), true);
 	}
 
 	private void setupView() {

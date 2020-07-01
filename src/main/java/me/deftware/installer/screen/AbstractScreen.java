@@ -3,8 +3,11 @@ package me.deftware.installer.screen;
 import lombok.Getter;
 import lombok.Setter;
 import me.deftware.installer.Main;
+import me.deftware.installer.engine.MainWindow;
+import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.screen.components.TextComponent;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.net.URI;
@@ -29,6 +32,7 @@ public abstract class AbstractScreen {
 	public void render(double mouseX, double mouseY) {
 		String tooltip = "";
 		// Main render
+		int cursor = GLFW.GLFW_ARROW_CURSOR;
 		for (int i = componentList.size() - 1; i > -1; i--) {
 			AbstractComponent<?> component = componentList.get(i);
 			if (component.isVisible()) {
@@ -38,8 +42,15 @@ public abstract class AbstractScreen {
 						tooltip = component.getTooltip();
 					}
 				}
+				if (cursor == GLFW.GLFW_ARROW_CURSOR) {
+					cursor = component.cursorTest(mouseX, mouseY);
+				}
 			}
 		}
+		if (!MainWindow.getCursorCache().containsKey(cursor)) {
+			MainWindow.getCursorCache().put(cursor, GLFW.glfwCreateStandardCursor(cursor));
+		}
+		GLFW.glfwSetCursor(Main.getWindow().getWindowHandle(), MainWindow.getCursorCache().get(cursor));
 		// Tooltip
 		if (!tooltip.isEmpty() && tooltipFont != null) {
 			// Draw tooltip
@@ -53,8 +64,11 @@ public abstract class AbstractScreen {
 				}
 				textHeight *= tooltip.split("/n").length;
 			}
-			RenderSystem.drawRect((float) mouseX + offset - textOffset, (float) mouseY + offset, (float) mouseX + offset + textWidth + (textOffset * 2), (float) mouseY + offset + textHeight, Color.black);
-			tooltipFont.drawString((float) mouseX + offset + textOffset, (float) mouseY + offset, Color.white, tooltip.contains("/n") ? tooltip.split("/n") : new String[]{ tooltip });
+			// Shadow
+			RenderSystem.drawRect((float) mouseX + offset - textOffset + 2, (float) mouseY + offset + 2, (float) mouseX + offset + textWidth + (textOffset * 2) + 2, (float) mouseY + offset + textHeight + 2, ThemeEngine.getTheme().getTooltipBackground().darker());
+			// Box
+			RenderSystem.drawRect((float) mouseX + offset - textOffset, (float) mouseY + offset, (float) mouseX + offset + textWidth + (textOffset * 2), (float) mouseY + offset + textHeight, ThemeEngine.getTheme().getTooltipBackground());
+			tooltipFont.drawString((float) mouseX + offset + textOffset, (float) mouseY + offset, ThemeEngine.getTheme().getTextColor(), tooltip.contains("/n") ? tooltip.split("/n") : new String[]{ tooltip });
 		}
 	}
 

@@ -8,6 +8,7 @@ import me.deftware.installer.resources.font.FontManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 /**
  * @author Deftware

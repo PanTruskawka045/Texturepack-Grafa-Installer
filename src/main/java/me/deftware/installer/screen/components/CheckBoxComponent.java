@@ -7,6 +7,7 @@ import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
 import me.deftware.installer.screen.AbstractComponent;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -24,6 +25,8 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	private @Getter @Setter boolean checked = false;
 	private @Setter @Getter String text;
 	private @Setter Consumer<Boolean> onCheckCallback;
+	private final BlendableRect blendableRect = new BlendableRect();
+	private boolean mouseOver = false;
 
 	public CheckBoxComponent(float x, float y, String text, int fontSize) {
 		super(x, y);
@@ -39,9 +42,17 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	}
 
 	@Override
+	public int cursorTest(double x, double y) {
+		if (x > getX() && x < getX() + width + height + 5 && y > getY() && y < getY() + height) {
+			return GLFW.GLFW_HAND_CURSOR;
+		}
+		return GLFW.GLFW_ARROW_CURSOR;
+	}
+
+	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		font.drawString((int) (x + height + 10), (int) y + 2, ThemeEngine.getTheme().getTextColor(), text);
-		RenderSystem.drawRect(x, y, x + height, y + height, ThemeEngine.getTheme().getForegroundColor());
+		RenderSystem.drawRect(x, y, x + height, y + height, blendableRect.getCurrentColor(alpha));
 		try {
 			if (checked) {
 				RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
@@ -51,6 +62,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		mouseOver = mouseX > x && mouseX < x + height && mouseY > y && mouseY < y + height;
 	}
 
 	@Override
@@ -66,7 +78,9 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	}
 
 	@Override
-	public void update() { }
+	public void update() {
+		blendableRect.update(mouseOver);
+	}
 
 	@Override
 	public void mouseReleased(double x, double y, int mouseButton) { }

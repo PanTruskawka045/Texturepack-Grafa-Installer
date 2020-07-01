@@ -98,7 +98,7 @@ public class DemoScreen extends AbstractScreen {
 				ThemeEngine.setTheme(DefaultThemes.PURPLE);
 			}
 		}), exitButton = new ButtonComponent(0, Main.getWindow().windowHeight - 100, 100, 50, "Exit", mouseClicked -> {
-			System.exit(0);
+			Main.getWindow().close();
 		});
 
 		// Two or more buttons can be centered next to each other by using the offset
