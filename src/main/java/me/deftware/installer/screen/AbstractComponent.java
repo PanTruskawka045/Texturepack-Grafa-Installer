@@ -13,6 +13,7 @@ public abstract class AbstractComponent<T> {
 
 	protected @Getter @Setter float x, y;
 	protected @Getter @Setter boolean visible = true;
+	protected @Getter @Setter boolean focused = false;
 
 	/**
 	 * Tooltips can be split into multilines using the /n delimiter

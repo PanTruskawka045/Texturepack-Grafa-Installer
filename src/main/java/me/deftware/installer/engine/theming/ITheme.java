@@ -61,4 +61,9 @@ public interface ITheme {
 	 */
 	String getTextFont();
 
+	/**
+	 * The name of the theme
+	 */
+	String getName();
+
 }

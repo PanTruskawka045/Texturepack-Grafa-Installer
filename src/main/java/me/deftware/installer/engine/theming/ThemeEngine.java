@@ -15,7 +15,7 @@ public class ThemeEngine {
 	/**
 	 * The current theme used by the window and components
 	 */
-	private @Getter static ITheme theme = DefaultThemes.PURPLE;
+	private @Getter static ITheme theme = DefaultThemes.BLUE;
 
 	/**
 	 * Returns a specified color with a specified alpha between 1 and 255 applied

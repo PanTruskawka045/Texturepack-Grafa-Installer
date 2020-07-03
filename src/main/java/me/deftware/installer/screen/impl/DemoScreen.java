@@ -40,6 +40,10 @@ public class DemoScreen extends AbstractScreen {
 		TextBoxComponent textBoxComponent = (TextBoxComponent) new TextBoxComponent(0, 120, 600, 30, "").centerHorizontally();
 		// You can set a shadow text that only appears when no text is entered
 		textBoxComponent.setShadowText("Click me and enter some text...");
+		// We can also set callbacks for when text is changed
+		textBoxComponent.setOnChangedCallback(text -> {
+			System.out.println("Text set to " + text);
+		});
 
 		/*
 			Browsable textbox, allows a user to click a button to open a folder browse dialog and sets the text to the chosen path
@@ -90,15 +94,19 @@ public class DemoScreen extends AbstractScreen {
 		 */
 		// Default text size on a button is 30
 		ButtonComponent themeButton = new ButtonComponent(0, Main.getWindow().windowHeight - 100, 100, 50, "Theme", mouseClicked -> {
-			if (ThemeEngine.getTheme() == DefaultThemes.PURPLE) {
+			if (ThemeEngine.getTheme() == DefaultThemes.BLUE) {
 				// The theme can be changed like this, all components will automatically update
 				// You can also create a new theme by implementing a class with ITheme
 				ThemeEngine.setTheme(DefaultThemes.WHITE);
 			} else {
-				ThemeEngine.setTheme(DefaultThemes.PURPLE);
+				ThemeEngine.setTheme(DefaultThemes.BLUE);
 			}
 		}), exitButton = new ButtonComponent(0, Main.getWindow().windowHeight - 100, 100, 50, "Exit", mouseClicked -> {
 			Main.getWindow().close();
+		});
+		// We can add multiple callbacks to a button click as well, to dynamically update tooltips for example
+		themeButton.getOnClickCallbacks().add(mouseButton -> {
+			themeButton.setTooltip(ThemeEngine.getTheme().getName());
 		});
 
 		// Two or more buttons can be centered next to each other by using the offset

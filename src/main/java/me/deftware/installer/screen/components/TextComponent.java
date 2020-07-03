@@ -76,6 +76,28 @@ public class TextComponent extends AbstractComponent<TextComponent> {
 		return font.getStringHeight("ABC123") * text.length;
 	}
 
+	public String trimToWidthReverse(String text, float maxWidth) {
+		int offsetIndex = 0;
+		for (int i = text.length(); i > -1; i--) {
+			if (getStringWidth(text.substring(i)) > maxWidth) {
+				offsetIndex = i;
+				break;
+			}
+		}
+		return text.substring(offsetIndex);
+	}
+
+	public String trimToWidth(String text, float maxWidth) {
+		int numChars = 0;
+		for (int i = 0; i < text.length(); i++) {
+			if (getStringWidth(text.substring(0, i)) > maxWidth) {
+				break;
+			}
+			numChars++;
+		}
+		return text.substring(0, numChars);
+	}
+
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		drawString(x, y, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), text);
@@ -84,7 +106,7 @@ public class TextComponent extends AbstractComponent<TextComponent> {
 		}
 	}
 
-	public void drawString(float x, float y, Color color, String... text) {
+	public float drawString(float x, float y, Color color, String... text) {
 		for (String line : text) {
 			if (!centeredText) {
 				font.drawString((int) x, (int) y, line,  color);
@@ -93,6 +115,7 @@ public class TextComponent extends AbstractComponent<TextComponent> {
 			}
 			y += font.getStringHeight(line);
 		}
+		return x + font.getStringWidth(text[0]);
 	}
 
 	public int getStringWidth(String s) {

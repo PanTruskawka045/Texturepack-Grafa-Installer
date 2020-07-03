@@ -7,6 +7,7 @@ import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
 import me.deftware.installer.screen.AbstractComponent;
+import me.deftware.installer.screen.components.effects.BlendableEffect;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -25,7 +26,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 	private boolean expanded = false, scrollbarDrag = false;
 	private @Setter Consumer<String> itemChangedCallback;
 	private double prevMouseY = 0;
-	private final BlendableRect blendableRect = new BlendableRect();
+	private final BlendableEffect blendableEffect = new BlendableEffect();
 	private boolean mouseOver = false;
 
 	public ComboBoxComponent(float x, float y, float width, int fontSize, String... items) {
@@ -65,7 +66,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 		RenderSystem.drawRect(x, y, x + width, y + (height * (expanded ? maxItems + 1 : 1)), ThemeEngine.getTheme().getOutlineColor());
 		RenderSystem.drawRect(x + 1, y + 1, x + width - 1, y + (height * (expanded ? maxItems + 1 : 1)) - 1, ThemeEngine.getTheme().getBackgroundColor());
 		font.drawString((int) x + 6, (int) y + 3, ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha), getSelectedItem());
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, blendableRect.getCurrentColor(alpha));
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, blendableEffect.getCurrentColor(alpha));
 		try {
 			RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
 			arrow.draw(x + width - height + ((height / 2) - (arrow.getWidth() / 2)), y + ((height / 2) - (arrow.getHeight() / 2)));
@@ -133,7 +134,7 @@ public class ComboBoxComponent extends AbstractComponent<ComboBoxComponent> {
 				}
 			}
 		}
-		blendableRect.update(mouseOver);
+		blendableEffect.update(mouseOver);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package me.deftware.installer.screen.components;
+package me.deftware.installer.screen.components.effects;
 
 import me.deftware.installer.engine.theming.ThemeEngine;
 
@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * @author Deftware
  */
-public class BlendableRect {
+public class BlendableEffect {
 
 	private float ratio = 0.5f;
 	private Color currentColor = ThemeEngine.getTheme().getForegroundColor();

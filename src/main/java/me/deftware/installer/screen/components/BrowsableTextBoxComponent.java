@@ -2,6 +2,7 @@ package me.deftware.installer.screen.components;
 
 import me.deftware.installer.engine.theming.ThemeEngine;
 import me.deftware.installer.resources.RenderSystem;
+import me.deftware.installer.screen.components.effects.BlendableEffect;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
@@ -10,20 +11,20 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
  */
 public class BrowsableTextBoxComponent extends TextBoxComponent {
 
-	private final BlendableRect blendableRect = new BlendableRect();
+	private final BlendableEffect blendableEffect = new BlendableEffect();
 	private boolean mouseOver = false;
 
 	public BrowsableTextBoxComponent(float x, float y, float width, int fontSize, String text) {
 		super(x, y, width, fontSize, text);
 		setReadOnly(true);
-		maxTextLength -= height + 10;
+		textAllowedWidth -= height + 20;
 	}
 
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		super.render(x, y, mouseX, mouseY);
-		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, blendableRect.getCurrentColor(alpha));
-		font.drawString((int) (x + width - height + 9), (int) (y), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha),"...");
+		RenderSystem.drawRect(x + width - height + 1, y + 1, x + width - 1, y + height - 1, blendableEffect.getCurrentColor(alpha));
+		textComponent.drawString((int) (x + width - height + 9), (int) (y), ThemeEngine.getColorWithAlpha(ThemeEngine.getTheme().getTextColor(), alpha),"...");
 		mouseOver = mouseX > x + width - height && mouseX < x+ width && mouseY > y && mouseY < y + height;
 	}
 
@@ -56,7 +57,7 @@ public class BrowsableTextBoxComponent extends TextBoxComponent {
 	@Override
 	public void update() {
 		super.update();
-		blendableRect.update(mouseOver);
+		blendableEffect.update(mouseOver);
 	}
 
 }

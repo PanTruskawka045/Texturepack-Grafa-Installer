@@ -12,6 +12,7 @@ import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.font.BitmapFont;
 import me.deftware.installer.resources.font.FontManager;
 import me.deftware.installer.screen.AbstractScreen;
+import me.deftware.installer.screen.impl.DemoScreen;
 import me.deftware.installer.screen.impl.WelcomeScreen;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;

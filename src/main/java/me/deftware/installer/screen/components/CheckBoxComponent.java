@@ -7,6 +7,7 @@ import me.deftware.installer.resources.RenderSystem;
 import me.deftware.installer.resources.ResourceUtils;
 import me.deftware.installer.resources.Texture;
 import me.deftware.installer.screen.AbstractComponent;
+import me.deftware.installer.screen.components.effects.BlendableEffect;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -25,7 +26,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	private @Getter @Setter boolean checked = false;
 	private @Setter @Getter String text;
 	private @Setter Consumer<Boolean> onCheckCallback;
-	private final BlendableRect blendableRect = new BlendableRect();
+	private final BlendableEffect blendableEffect = new BlendableEffect();
 	private boolean mouseOver = false;
 
 	public CheckBoxComponent(float x, float y, String text, int fontSize) {
@@ -52,7 +53,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 	@Override
 	public void render(float x, float y, double mouseX, double mouseY) {
 		font.drawString((int) (x + height + 10), (int) y + 2, ThemeEngine.getTheme().getTextColor(), text);
-		RenderSystem.drawRect(x, y, x + height, y + height, blendableRect.getCurrentColor(alpha));
+		RenderSystem.drawRect(x, y, x + height, y + height, blendableEffect.getCurrentColor(alpha));
 		try {
 			if (checked) {
 				RenderSystem.glColor(ThemeEngine.getTheme().getTextColor());
@@ -79,7 +80,7 @@ public class CheckBoxComponent extends AbstractComponent<CheckBoxComponent> {
 
 	@Override
 	public void update() {
-		blendableRect.update(mouseOver);
+		blendableEffect.update(mouseOver);
 	}
 
 	@Override
