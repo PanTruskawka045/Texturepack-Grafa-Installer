@@ -21,7 +21,7 @@ public class VersionScreen extends AbstractScreen {
 
 		addComponent(versionsBox, new TextComponent(0, 65,  40, "Which Minecraft version?").centerHorizontally(),
 				new TextComponent(0, 130,  25, "Select which Minecraft version you would like to use Aristois with:").centerHorizontally(),
-				new TextComponent(0, 300,  25, "We support all versions between", versions[0] + " and " + versions[versions.length - 1]).centerHorizontally(),
+				new TextComponent(0, 280,  25, "We support all versions between", versions[0] + " and " + versions[versions.length - 1], "(1.12.2 through 1.8.9 in beta)").centerHorizontally(),
 				new ButtonComponent(50, 400, 100, 50, "Continue", mouseButton -> {
 			String version = versionsBox.getSelectedItem().substring("Minecraft ".length());
 					Main.getWindow().transitionForward(new TransitionScreen("Got it, Minecraft " + version + " it is.", button -> {

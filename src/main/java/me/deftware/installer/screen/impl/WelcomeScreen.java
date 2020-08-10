@@ -23,7 +23,7 @@ public class WelcomeScreen extends AbstractScreen {
 	@Override
 	public void init() {
 		componentList.clear();
-		AbstractComponent logoShadow = new TextureComponent(0, 2, "/assets/logo_shadow.png", 4).centerHorizontally(2);
+		AbstractComponent<TextureComponent> logoShadow = new TextureComponent(0, 2, "/assets/logo_shadow.png", 4).centerHorizontally(2);
 		addComponent(new TextureComponent(0, 0, "/assets/logo.png", 4).centerHorizontally(), logoShadow);
 		button = new ButtonComponent(50, 350, 150, 50, "Fetching data...", mouseButton -> {
 			if (loaded) {
