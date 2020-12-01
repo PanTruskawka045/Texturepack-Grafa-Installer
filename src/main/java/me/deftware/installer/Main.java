@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class Main {
 
 	public static String donorString = "@DONOR@";
-	public @Getter static String version = "1.9.2.4";
+	public @Getter static String version = "1.9.2.6";
 	public @Getter static MainWindow window;
 
 	public static void main(String[] args) {
