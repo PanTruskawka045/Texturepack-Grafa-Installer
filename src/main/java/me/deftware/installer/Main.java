@@ -7,18 +7,21 @@ import me.deftware.installer.engine.MainWindow;
 import me.deftware.installer.resources.font.FontManager;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
 
 /**
  * @author Deftware
  */
 public class Main {
 
-	public static String donorString = "@DONOR@";
-	public @Getter static String version = "1.9.2.6";
-	public @Getter static MainWindow window;
+	private final static String donorString = "@DONOR@";
 
+	@Getter
+	public static String version = "@VERSION@";
+
+	@Getter
+	public static MainWindow window;
+
+	@SuppressWarnings("ConstantConditions")
 	public static void main(String[] args) {
 		if (args.length != 0 && !OSUtils.isMac()) {
 			System.setProperty("org.lwjgl.util.Debug", "true");

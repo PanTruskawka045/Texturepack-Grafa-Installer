@@ -13,11 +13,25 @@ apply plugin: "io.freefair.lombok"
 apply plugin: 'java'
 
 group 'me.deftware'
-version '1.9.2.3'
+version '1.9.3.0'
 
 def donorBuild = project.hasProperty('donorbuild') ? project.property('donorbuild').toString() : "false"
 
 sourceCompatibility = 1.8
+
+def urlFile = { url, name ->
+    File file = new File("$buildDir/download/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
 
 configurations {
     extraLibs
@@ -31,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    extraLibs  'com.gitlab.Aristois:Installer:master-SNAPSHOT'
+    extraLibs urlFile("https://gitlab.com/Aristois/Installer/-/jobs/1623467087/artifacts/raw/packager/free/Installer-1.9.3.0.jar", "installer-api.jar")
 
     // LWJGL
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3'
@@ -67,7 +81,7 @@ task copyToPackager(type: Copy) {
     from "build/libs/"
     into 'packager/'
     rename (
-          "installer-${version}.jar", (donorBuild == "true" ? "Aristois-Donor.jar" : "Aristois-Free.jar")
+            "installer-${version}.jar", (donorBuild == "true" ? "Aristois-Donor.jar" : "Aristois-Free.jar")
     )
 }
 
@@ -88,7 +102,7 @@ def copyDir = "$compileJava.temporaryDir/replaced"
 task tokenReplace(type: Copy) {
     from(sourceSets.main.java.sourceDirectories)
     into copyDir
-    filter(ReplaceTokens, tokens: [DONOR: donorBuild])
+    filter(ReplaceTokens, tokens: [DONOR: donorBuild, VERSION: version])
 }
 compileJava.setSource(copyDir)
 compileJava.dependsOn(tokenReplace)

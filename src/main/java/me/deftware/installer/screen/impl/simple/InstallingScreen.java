@@ -1,6 +1,6 @@
 package me.deftware.installer.screen.impl.simple;
 
-import me.deftware.aristois.installer.jsonbuilder.AbstractJsonBuilder;
+import me.deftware.aristois.installer.jsonbuilder.JsonBuilder;
 import me.deftware.aristois.installer.modloader.impl.ForgeInstaller;
 import me.deftware.aristois.installer.utils.VersionData;
 import me.deftware.installer.Main;
@@ -69,7 +69,7 @@ public class InstallingScreen extends AbstractScreen {
 			if (launcher.toLowerCase().contains("forge")) {
 				result = new ForgeInstaller().install(version, path + File.separator);
 			} else {
-				AbstractJsonBuilder builder = version.getBuilder(launcher.substring(0, launcher.length() - " launcher".length()), launcher.substring(0, launcher.length() - " launcher".length()));
+				JsonBuilder builder = version.getBuilder(launcher.substring(0, launcher.length() - " launcher".length()), launcher.substring(0, launcher.length() - " launcher".length()));
 				result = builder.install(builder.build(version), version, path + File.separator);
 				try {
 					Thread.sleep(2000);
