@@ -62,7 +62,7 @@ public class WindowDecorations {
 			}
 		});
 
-		font = FontManager.getFont( "Product Sans", 20, FontManager.Modifiers.ANTIALIASED);
+		font = FontManager.getFont( "NotoSans-Regular", 20, FontManager.Modifiers.ANTIALIASED);
 		font.initialize(Color.white, "");
 	}
 

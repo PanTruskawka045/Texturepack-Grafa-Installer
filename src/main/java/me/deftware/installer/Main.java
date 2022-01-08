@@ -38,7 +38,7 @@ public class Main {
 		InstallerAPI.setDonorBuild(Boolean.parseBoolean(donorString));
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			FontManager.loadFontFromAssets("/assets/sans.ttf");
+			FontManager.loadFontFromAssets("/assets/NotoSans-Regular.ttf");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

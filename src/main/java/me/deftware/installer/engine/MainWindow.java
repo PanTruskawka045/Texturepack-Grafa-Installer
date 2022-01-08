@@ -262,7 +262,7 @@ public class MainWindow implements Runnable {
 		GL.createCapabilities();
 		setupView();
 
-		BitmapFont font = FontManager.getFont("Product Sans", 18, FontManager.Modifiers.ANTIALIASED);
+		BitmapFont font = FontManager.getFont("NotoSans-Regular", 18, FontManager.Modifiers.ANTIALIASED);
 		font.setShadowSize(1);
 		font.initialize(Color.white, "");
 
