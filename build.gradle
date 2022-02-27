@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    extraLibs urlFile("https://gitlab.com/Aristois/Installer/-/jobs/2142062951/artifacts/raw/packager/free/Installer-2.0.2.exe", "install-api-2.0.2.jar")
+    extraLibs urlFile("https://gitlab.com/Aristois/Installer/-/jobs/2142062951/artifacts/raw/packager/free/Installer-2.0.2.jar", "install-api-2.0.2.jar")
 
     // LWJGL
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3'
