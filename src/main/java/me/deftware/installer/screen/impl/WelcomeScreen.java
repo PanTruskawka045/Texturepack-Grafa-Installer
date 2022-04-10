@@ -23,12 +23,11 @@ public class WelcomeScreen extends AbstractScreen {
 	@Override
 	public void init() {
 		componentList.clear();
-		AbstractComponent<TextureComponent> logoShadow = new TextureComponent(0, 2, "/assets/logo_shadow.png", 4).centerHorizontally(2);
-		addComponent(new TextureComponent(0, 0, "/assets/logo.png", 4).centerHorizontally(), logoShadow);
-		button = new ButtonComponent(50, 350, 150, 50, "Fetching data...", mouseButton -> {
-			if (loaded) {
+		addComponent(new TextureComponent(0, 0, "/assets/logo.png", 4).centerHorizontally());
+		button = new ButtonComponent(50, 350, 230, 50, "Rozpocznij instalacje", mouseButton -> {
+//			if (loaded) {
 				Main.getWindow().transitionForward(new VersionScreen());
-			}
+//			}
 		});
 		button.centerHorizontally();
 
@@ -38,20 +37,32 @@ public class WelcomeScreen extends AbstractScreen {
 		gitIcon.setX(Main.getWindow().windowWidth - gitIcon.getWidth() - 10);
 		gitIcon.setY(Main.getWindow().windowHeight - gitIcon.getHeight() - 10);
 
-		addComponent(button, gitIcon, new TextComponent(0, gitIcon.getY() + 20,  18, mouseButton -> {
-			MainWindow.openLegacy();
-			GLFW.glfwSetWindowShouldClose(Main.getWindow().getWindowHandle(), true);
-		}, "Legacy installer").centerHorizontally());
+		TextureComponent githubIcon = new TextureComponent(0, 0, "/assets/github.png", 10, mouseButton -> {
+			openLink("https://github.com/Obscik/txtgrafa.pl");
+		});
+		githubIcon.setX(Main.getWindow().windowWidth - githubIcon.getWidth() - 20 - gitIcon.getWidth());
+		githubIcon.setY(Main.getWindow().windowHeight - githubIcon.getHeight() - 10);
 
-		new Thread(() -> {
-			InstallerAPI.fetchData(false);
-			loaded = true;
-			String jsonVersion = InstallerAPI.getJsonData().get("latestVersion").getAsString();
-			if (!jsonVersion.equals(Main.getVersion())) {
-				Main.getWindow().transitionForward(new UpdateScreen(jsonVersion));
-			}
-			button.setText("Continue");
-		}).start();
+		TextureComponent youtubeIcon = new TextureComponent(0, 0, "/assets/youtube.png", 10, mouseButton -> {
+			openLink("https://youtube.com/c/PanTruskawka045");
+		});
+		youtubeIcon.setX(Main.getWindow().windowWidth - youtubeIcon.getWidth() - 30 - gitIcon.getWidth() - githubIcon.getWidth());
+		youtubeIcon.setY(Main.getWindow().windowHeight - youtubeIcon.getHeight() - 10);
+
+		addComponent(button, gitIcon, githubIcon, youtubeIcon, new TextComponent(0, gitIcon.getY() + 20,  18, mouseButton -> {
+//			MainWindow.openLegacy();
+//			GLFW.glfwSetWindowShouldClose(Main.getWindow().getWindowHandle(), true);
+		}, "Instalator paczki Grafa").centerHorizontally());
+
+//		new Thread(() -> {
+//			InstallerAPI.fetchData(false);
+//			loaded = true;
+//			String jsonVersion = InstallerAPI.getJsonData().get("latestVersion").getAsString();
+//			if (!jsonVersion.equals(Main.getVersion())) {
+//				Main.getWindow().transitionForward(new UpdateScreen(jsonVersion));
+//			}
+//			button.setText("Continue");
+//		}).start();
 	}
 
 	@Override

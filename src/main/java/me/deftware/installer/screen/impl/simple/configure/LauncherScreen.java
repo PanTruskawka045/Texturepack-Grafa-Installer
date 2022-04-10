@@ -27,68 +27,14 @@ public class LauncherScreen extends AbstractScreen {
 	public void init() {
 		componentList.clear();
 
-		VersionData data = InstallerAPI.getVersions().get(version);
-		String[] launchers = new String[data.getLaunchers().size() + data.getModLoaders().size()];
-		for (int i = 0; i < data.getLaunchers().size(); i++) {
-			launchers[i] = data.getLaunchers().get(i) + " launcher";
-		}
-		for (int i = data.getLaunchers().size(); i < data.getLaunchers().size() + data.getModLoaders().size(); i++) {
-			launchers[i] = data.getModLoaders().get(i - data.getLaunchers().size()) + " mod loader";
-		}
-
-		ComboBoxComponent launcherBox = new ComboBoxComponent(0, 240, 600, 30,  launchers);
-		launcherBox.centerHorizontally();
-
-		TextBoxComponent minecraftPath = new BrowsableTextBoxComponent(0, 300, 600, 30, OSUtils.getMCDir());
-		minecraftPath.setShadowText("Minecraft path...");
+		TextBoxComponent minecraftPath = new BrowsableTextBoxComponent(0, 300, 700, 30, OSUtils.getMCDir() + "resourcepacks");
+		minecraftPath.setShadowText("Sciezka");
 		minecraftPath.centerHorizontally();
 
-		addComponent(new TextComponent(0, 65,  40, "Launcher & Directory").centerHorizontally(),
-				new TextComponent(0, 130,  25, "Select your launcher and Minecraft directory.", "Press \"Continue\" for a default installation:").centerHorizontally(),
-				launcherBox, new ButtonComponent(50, 400, 100, 50, "Continue", mouseButton -> {
-					String launcher = launcherBox.getSelectedItem();
-					if (launcher.toLowerCase().contains("mod loader")) {
-						Main.getWindow().transitionForward(new YesNoScreen("Warning! This may cause issues.", confirm -> {
-							if (!confirm) {
-								Main.getWindow().transitionBackwards(LauncherScreen.this);
-							} else {
-								Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
-							}
-						}, "Using a custom mod loader is not officially supported", "and you may crash or have stability issues.", "Do not report bugs when using one.", "", "If you still wish to use one, press \"Continue\""));
-					} else {
-						if (launcher.toLowerCase().contains("multimc")) {
-							File instancesFolder = new File(minecraftPath.getText() + File.separator + "instances" + File.separator);
-							if (!instancesFolder.exists()) {
-								Main.getWindow().transitionForward(new TransitionScreen("Uh oh! Invalid path :(", button -> {
-									Main.getWindow().transitionBackwards(LauncherScreen.this);
-								}, 3000, "Please specify a valid MultiMC root directory.", "", "You will be redirected back to select it."));
-							} else {
-								Main.getWindow().transitionForward(new MultiMCInstanceScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
-							}
-						} else {
-							File mcDir = new File(minecraftPath.getText());
-							boolean proceed = true;
-							if (!mcDir.exists()) {
-								proceed = false;
-							} else {
-								// Make sure its an actual mc directory
-								if (!new File(mcDir.getAbsolutePath() + File.separator + "versions" + File.separator).exists()) {
-									proceed = false;
-								}
-							}
-							if (proceed) {
-								Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
-							} else {
-								Main.getWindow().transitionForward(new YesNoScreen("Are you sure this is correct?", confirm -> {
-									if (confirm) {
-										Main.getWindow().transitionForward(new InstallingScreen(InstallerAPI.getVersions().get(version), minecraftPath.getText(), launcher));
-									} else {
-										Main.getWindow().transitionBackwards(LauncherScreen.this);
-									}
-								}, "The Minecraft directory you have chosen", "does not appear to contain the necessary files required for", "Minecraft to run, do you still want to proceed with this path?"));
-							}
-						}
-					}
+		addComponent(new TextComponent(0, 65,  40, "Sciezka").centerHorizontally(),
+				new TextComponent(0, 130,  25, "Wybierz sciezke, w ktorej zostanie zainstalowany texturepack.", "Potem kliknij \"Kontynuuj\".").centerHorizontally(),
+				new ButtonComponent(50, 400, 100, 50, "Kontynuuj", mouseButton -> {
+					Main.getWindow().transitionForward(new InstallingScreen(version, minecraftPath.getText()));
 				}).centerHorizontally(), minecraftPath);
 	}
 

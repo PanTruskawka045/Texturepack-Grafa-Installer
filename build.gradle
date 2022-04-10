@@ -47,6 +47,7 @@ repositories {
 dependencies {
     extraLibs urlFile("https://gitlab.com/Aristois/Installer/-/jobs/2142062951/artifacts/raw/packager/free/Installer-2.0.2.jar", "install-api-2.0.2.jar")
 
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
     // LWJGL
     extraLibs group: 'org.lwjgl', name: 'lwjgl', version:'3.2.3'
     extraLibs group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.2.3'

@@ -141,12 +141,7 @@ public class MainWindow implements Runnable {
 	}
 
 	public static void openLegacy() {
-		if (!legacyOpen) {
-			System.out.println("Opening in legacy mode");
-			legacyOpen = true;
-			InstallerAPI.fetchData(false);
-			InstallerUI.create().setVisible(true);
-		}
+
 	}
 
 	private void init() {
@@ -301,7 +296,7 @@ public class MainWindow implements Runnable {
 			if (transitionScreen != null) {
 				transitionScreen.render(mouseX, mouseY);
 			}
-			font.drawString(4, windowHeight - font.getStringHeight("ABC") - 2, "aristois.net");
+			font.drawString(4, windowHeight - font.getStringHeight("ABC") - 2, "txtgrafa.pl");
 
 			if (borderlessWindow){
 				windowDecorations.loop();
