@@ -21,8 +21,8 @@ public class Main {
 	private static final Map<String, TexturepackVersion> texturepackVersions = new LinkedHashMap<>();
 
 	static {
-		texturepackVersions.put("Overlay 1.10", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bOverlay%20Grafa%20%C2%A7a1.19%20%C2%A7fCzerwiec%202022.zip", "\u00A7bOverlay Grafa \u00A7a1.19 \u00A7fCzerwiec 2022.zip"));
-		texturepackVersions.put("Ramki do rud 1.10", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bRamki%20do%20rud%20%C2%A7a1.19.zip", "\u00A7bRamki do rud \u00A7a1.19.zip"));
+		texturepackVersions.put("Overlay 1.19", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bOverlay%20Grafa%20%C2%A7a1.19%20%C2%A7fCzerwiec%202022.zip", "\u00A7bOverlay Grafa \u00A7a1.19 \u00A7fCzerwiec 2022.zip"));
+		texturepackVersions.put("Ramki do rud 1.19", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bRamki%20do%20rud%20%C2%A7a1.19.zip", "\u00A7bRamki do rud \u00A7a1.19.zip"));
 		texturepackVersions.put("Overlay 1.18", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bOverlay%20Grafa%20%C2%A7a1.18%20%C2%A7fGrudzien%202021.zip", "\u00A7bOverlay Grafa \u00A7a1.18 \u00A7fGrudzien 2021.zip"));
 		texturepackVersions.put("Ramki do rud 1.18", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bRamki%20do%20rud%20%C2%A7a1.18.zip", "\u00A7bRamki do rud \u00A7a1.18.zip"));
 		texturepackVersions.put("Overlay 1.17", new TexturepackVersion("https://txtgrafa.pl/pliki/txt/%C2%A7bOverlay%20Grafa%20%C2%A7a1.17%20%C2%A7fListopad%202021.zip", "\u00A7bOverlay Grafa \u00A7a1.17 \u00A7fListopad 2021.zip"));
